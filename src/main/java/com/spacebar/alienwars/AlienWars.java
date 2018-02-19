@@ -4,18 +4,13 @@ import com.spacebar.alienwars.context.AppContext;
 import com.spacebar.alienwars.screen.DisplayType;
 import com.spacebar.alienwars.screen.Displayable;
 import com.spacebar.alienwars.screen.Screen;
+import com.spacebar.alienwars.screen.cli.CLIScreen;
 
 public class AlienWars {
 
     public static void main(String[] args) {
-        AppContext appContext = AppContext.getInstance();
-        Screen screen = appContext.getScreen();
-        screen.getIOStream().writeLine("loading...");
-
-        Displayable welcome = appContext.getDisplayProvider().getDisplay(DisplayType.WELCOME);
-        if (welcome != null) {
-            welcome.display(screen);
-        }
+        Screen screen = new CLIScreen(100, 100);
+        screen.getDisplayExplorer().next(screen, DisplayType.HOME);
     }
 
     public static void mainx(String[] args) {

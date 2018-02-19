@@ -13,4 +13,6 @@ public interface IOStream<T> {
     T readLine();
 
     int readInt();
+
+    void clear();
 }

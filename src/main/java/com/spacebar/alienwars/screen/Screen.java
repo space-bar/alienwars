@@ -1,38 +1,17 @@
 package com.spacebar.alienwars.screen;
 
-import java.awt.*;
 
-public class Screen {
+public interface Screen {
 
-    private final int width;
-    private final int height;
-    private IOStream ioStream;
+    int getWidth();
 
-    public Screen(int width, int height) {
-        this.width = width;
-        this.height = height;
-    }
+    int getHeight();
 
-    public Screen(int width, int height, IOStream ioStream) {
-        this.width = width;
-        this.height = height;
-        this.ioStream = ioStream;
-    }
+    boolean isWindows();
 
-    public int getWidth() {
-        return width;
-    }
+    IOStream getIOStream();
 
-    public int getHeight() {
-        return height;
-    }
+    DisplayProvider getDisplayProvider();
 
-    public IOStream getIOStream() {
-        return ioStream;
-    }
-
-    public void setIOStream(IOStream ioStream) {
-        this.ioStream = ioStream;
-    }
-
+    DisplayExplorer getDisplayExplorer();
 }

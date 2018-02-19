@@ -1,8 +1,6 @@
 package com.spacebar.alienwars.context;
 
-import com.spacebar.alienwars.screen.DisplayProvider;
-import com.spacebar.alienwars.screen.IOStream;
-import com.spacebar.alienwars.screen.Screen;
+import com.spacebar.alienwars.screen.*;
 import com.spacebar.alienwars.screen.cli.CLIDisplayProvider;
 import com.spacebar.alienwars.screen.cli.CLIIOStream;
 
@@ -18,13 +16,16 @@ public class AppContext {
 
     private DisplayProvider displayProvider;
 
+    private DisplayExplorer displayExplorer;
+
     {
         String os = System.getProperty("os.name");
         windows = os != null && os.contains("Windows");
 
         ioStream = new CLIIOStream();
-        screen = new Screen(100, 20, ioStream);
+        //screen = new Screen(100, 20, ioStream);
         displayProvider = new CLIDisplayProvider();
+        displayExplorer = new DefaultDisplayExplorer();
     }
 
 

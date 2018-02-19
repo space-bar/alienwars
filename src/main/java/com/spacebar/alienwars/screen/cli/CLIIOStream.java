@@ -1,11 +1,14 @@
 package com.spacebar.alienwars.screen.cli;
 
 import com.spacebar.alienwars.screen.IOStream;
+import com.sun.java.swing.plaf.windows.resources.windows;
 
 import java.io.Console;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 public class CLIIOStream implements IOStream<String> {
 
@@ -14,6 +17,13 @@ public class CLIIOStream implements IOStream<String> {
     private final static PrintStream out = System.out;
 
     private final Scanner in = console == null ? new Scanner(System.in) : null;
+
+    private boolean windows;
+
+    {
+        String os = System.getProperty("os.name");
+        windows = os != null && os.contains("Windows");
+    }
 
     @Override
 
@@ -79,5 +89,48 @@ public class CLIIOStream implements IOStream<String> {
         } else {
             return in.nextInt();
         }
+    }
+
+
+    @Override
+    public void clear() {
+        if (windows) {
+            clearWindows();
+        } else {
+            clearUnix();
+        }
+    }
+
+    private void clearWindows() {
+        try {
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        } catch (InterruptedException | IOException e) {
+            clearByBackspace();
+        }
+    }
+
+
+    private void clearUnix() {
+        try {
+            if (console != null) {
+                console.writer().print("\033[H\033[2J");
+                console.flush();
+            } else {
+                out.println("\033[H\033[2J");
+            }
+        } catch (Exception e) {
+            clearByBackspace();
+        }
+    }
+
+    private void clearByBackspace() {
+        IntStream.range(0, 80 * 300).forEach(i -> {
+            if (console != null) {
+                console.writer().print("\b");
+                console.flush();
+            } else {
+                out.print("\b");
+            }
+        });
     }
 }

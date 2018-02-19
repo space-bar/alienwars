@@ -98,4 +98,17 @@ public class ASCIIDisplay {
         }
         return index;
     }
+
+    protected void drawHeader(String... headers) {
+
+    }
+
+    protected void drawBody() {
+
+    }
+
+    protected void drawFooter() {
+
+    }
+
 }
