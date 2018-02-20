@@ -1,16 +1,14 @@
 package com.spacebar.alienwars.screen.cli.display;
 
 import com.spacebar.alienwars.screen.Displayable;
-import com.spacebar.alienwars.screen.IOStream;
 import com.spacebar.alienwars.screen.Screen;
-import com.spacebar.alienwars.screen.cli.ASCIIDisplay;
 
 public class StartGame implements Displayable {
 
     @Override
     public void display(Screen screen) {
-        IOStream r = screen.getIOStream();
-        r.writeLine(ASCIIDisplay.APP_LOGO);
+     /*   IOStream r = screen.getIOStream();
+        r.writeLine(CLIAbstractDisplay.APP_LOGO);
         r.writeLine("===========================================================\n");
 
         r.writeLine("|       What do you want to do ?                           |");
@@ -22,7 +20,7 @@ public class StartGame implements Displayable {
 
         r.writeLine("\n===========================================================\n");
 
-        r.write("Enter Menu Number :");
+        r.write("Enter Menu Number :");*/
 
         //readInput(screen);
         //System.out.print("\033[31;1mHello\033[0m, \033[32;1;2mworld!\033[0m");
