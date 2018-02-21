@@ -1,6 +1,8 @@
 package com.spacebar.alienwars.screen;
 
 
+import com.spacebar.alienwars.game.Game;
+
 public interface Screen {
 
     int getWidth();
@@ -14,4 +16,6 @@ public interface Screen {
     DisplayProvider getDisplayProvider();
 
     DisplayExplorer getDisplayExplorer();
+
+    Game getGame();
 }

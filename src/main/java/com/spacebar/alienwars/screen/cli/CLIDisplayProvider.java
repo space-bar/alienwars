@@ -30,8 +30,8 @@ public class CLIDisplayProvider implements DisplayProvider {
                 case HOME:
                     return getHomeDisplay();
 
-                case START_NEW_GAME:
-                    return getStartNewGameDisplay();
+                case NEW_GAME:
+                    return getNewGameDisplay();
 
                 case LOAD_SAVED_GAME:
                     return getLoadSavedGameDisplay();
@@ -69,9 +69,9 @@ public class CLIDisplayProvider implements DisplayProvider {
         return startGameDisplay;
     }
 
-    private Displayable getStartNewGameDisplay() {
+    private Displayable getNewGameDisplay() {
         if (startNewGameDisplay == null) {
-            startNewGameDisplay = new StartNewGame();
+            startNewGameDisplay = new NewGame();
         }
         return startNewGameDisplay;
     }

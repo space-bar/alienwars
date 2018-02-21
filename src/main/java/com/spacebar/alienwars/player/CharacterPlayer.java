@@ -1,4 +1,4 @@
 package com.spacebar.alienwars.player;
 
-public class CharacterPlayer {
+public interface CharacterPlayer extends Player {
 }
