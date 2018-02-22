@@ -1,5 +1,6 @@
 package com.spacebar.alienwars.display.cli;
 
+import com.spacebar.alienwars.display.DisplayType;
 import com.spacebar.alienwars.display.Displayable;
 import com.spacebar.alienwars.io.IOStream;
 import com.spacebar.alienwars.screen.Screen;
@@ -24,6 +25,18 @@ public abstract class AbstractCLIDisplay implements Displayable {
             " |A||l||i||e||n| |W||a||r||s|\n" +
             " +-++-++-++-++-+ +-++-++-++-+";
 
+    private final DisplayType displayType;
+
+    public AbstractCLIDisplay(DisplayType displayType) {
+        if (displayType == null) {
+            throw new IllegalArgumentException();
+        }
+        this.displayType = displayType;
+    }
+
+    public DisplayType getDisplayType() {
+        return displayType;
+    }
 
     protected <T> void readInput(Screen screen, Consumer<T> fnx) {
         IOStream r = screen.getIOStream();
@@ -45,7 +58,8 @@ public abstract class AbstractCLIDisplay implements Displayable {
         }
     }
 
-    public void drawx(Screen screen, String... contents) {
+
+   /* public void drawx(Screen screen, String... contents) {
         IntStream.range(0, screen.getHeight()).forEach((col) -> {
             IntStream.range(0, screen.getWidth()).forEach((row) -> {
                 if (row == 0) {
@@ -94,7 +108,7 @@ public abstract class AbstractCLIDisplay implements Displayable {
             screen.getIOStream().writeLine("");
         }
         return index;
-    }
+    }*/
 
     protected void drawHeader(Screen screen, String... headers) {
         int width = screen.getWidth();
@@ -169,7 +183,7 @@ public abstract class AbstractCLIDisplay implements Displayable {
         return sb.toString();
     }
 
-    private int computeMaxWidth(String... values) {
+    protected int computeMaxWidth(String... values) {
         return Arrays.stream(values)
                 .mapToInt((value) -> value.length())
                 .max().orElse(1);

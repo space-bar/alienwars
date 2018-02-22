@@ -12,9 +12,9 @@ public interface Spaceship {
 
     Point getCoordinate();
 
-    boolean isAlienShip();
+    SpaceshipType getSpaceshipType();
 
-    String getShipName();
+    String getSpaceshipName();
 
     String getDescription();
 }

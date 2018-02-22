@@ -3,6 +3,7 @@ package com.spacebar.alienwars.screen;
 
 import com.spacebar.alienwars.display.DefaultDisplayExplorer;
 import com.spacebar.alienwars.display.DisplayExplorer;
+import com.spacebar.alienwars.spaceship.SpaceshipFactory;
 
 public abstract class AbstractScreen implements Screen {
 
@@ -14,6 +15,7 @@ public abstract class AbstractScreen implements Screen {
 
 
     private DisplayExplorer displayExplorer;
+
 
     {
         String os = System.getProperty("os.name");
@@ -48,5 +50,6 @@ public abstract class AbstractScreen implements Screen {
         }
         return displayExplorer;
     }
+
 
 }

@@ -17,6 +17,10 @@ public class About extends AbstractCLIDisplay {
             "\\____|__  /___  /\\____/|____/ |__|  \n" +
             "        \\/    \\/                    \\033[0m";
 
+    public About() {
+        super(DisplayType.ABOUT);
+    }
+
     @Override
     public void display(Screen screen) {
         IOStream r = screen.getIOStream();

@@ -17,6 +17,10 @@ public class Home extends AbstractCLIDisplay {
             "|   ,'.   | \\   --. |  | \\ `--. ' '-' ' |  |  |  | \\   --.\n" +
             "'--'   '--'  `----' `--'  `---'  `---'  `--`--`--'  `----'";
 
+    public Home() {
+        super(DisplayType.HOME);
+    }
+
     public void display(Screen screen) {
         IOStream r = screen.getIOStream();
         drawHeader(screen, header.split("\\n"));
@@ -59,7 +63,7 @@ public class Home extends AbstractCLIDisplay {
                     screen.getDisplayExplorer().next(screen, DisplayType.LOAD_SAVED_GAME);
                     break;
                 case 3:
-                    screen.getDisplayExplorer().next(screen, DisplayType.HELP);
+                    screen.getDisplayExplorer().next(screen, DisplayType.PLAY_GAME);
                     break;
                 case 4:
                     screen.getDisplayExplorer().next(screen, DisplayType.ABOUT);

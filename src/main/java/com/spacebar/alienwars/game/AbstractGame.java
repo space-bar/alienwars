@@ -2,8 +2,6 @@ package com.spacebar.alienwars.game;
 
 import com.spacebar.alienwars.exception.GameIllegalStateException;
 import com.spacebar.alienwars.exception.GameInitializationException;
-import com.spacebar.alienwars.player.AlienPlayer;
-import com.spacebar.alienwars.player.CharacterPlayer;
 import com.spacebar.alienwars.player.Player;
 
 public class AbstractGame implements Game {

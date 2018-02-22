@@ -13,15 +13,18 @@ public abstract class AbstractSpaceship implements Spaceship {
 
     private String description;
 
-    private final String shipName;
+    private String spaceshipName;
 
-    private final boolean alienShip;
+    private final SpaceshipType spaceshipType;
 
-
-    public AbstractSpaceship(String shipName, boolean alienShip) {
-        this.shipName = shipName;
-        this.alienShip = alienShip;
+    public AbstractSpaceship(SpaceshipType spaceshipType) {
+        if (spaceshipType == null) {
+            throw new IllegalArgumentException();
+        }
+        this.spaceshipType = spaceshipType;
+        this.spaceshipName = spaceshipType.name();
     }
+
 
     @Override
     public Weapon getWeapon() {
@@ -42,8 +45,8 @@ public abstract class AbstractSpaceship implements Spaceship {
     }
 
     @Override
-    public boolean isAlienShip() {
-        return alienShip;
+    public SpaceshipType getSpaceshipType() {
+        return spaceshipType;
     }
 
     @Override
@@ -56,7 +59,11 @@ public abstract class AbstractSpaceship implements Spaceship {
     }
 
     @Override
-    public String getShipName() {
-        return shipName;
+    public String getSpaceshipName() {
+        return spaceshipName;
+    }
+
+    public void setSpaceshipName(String name) {
+        this.spaceshipName = name;
     }
 }

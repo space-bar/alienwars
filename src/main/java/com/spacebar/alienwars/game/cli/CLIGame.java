@@ -1,12 +1,12 @@
 package com.spacebar.alienwars.game.cli;
 
 import com.spacebar.alienwars.game.AbstractGame;
-import com.spacebar.alienwars.player.AlienPlayer;
-import com.spacebar.alienwars.player.CharacterPlayer;
+import com.spacebar.alienwars.player.Player;
+
 
 public class CLIGame extends AbstractGame {
 
-    public CLIGame(CharacterPlayer characterPlayer, AlienPlayer alienPlayer) {
-        super(characterPlayer, null);
+    public CLIGame(Player characterPlayer, Player[] alienPlayers) {
+        super(characterPlayer, alienPlayers);
     }
 }

@@ -6,7 +6,9 @@ public interface Player {
 
     String getPlayerName();
 
-    boolean isAlien();
+    PlayerType getPlayerType();
 
     Spaceship getSpaceship();
+
+    void setSpaceship(Spaceship spaceship);
 }
