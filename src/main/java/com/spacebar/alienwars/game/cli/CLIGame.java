@@ -7,6 +7,6 @@ import com.spacebar.alienwars.player.CharacterPlayer;
 public class CLIGame extends AbstractGame {
 
     public CLIGame(CharacterPlayer characterPlayer, AlienPlayer alienPlayer) {
-        super(characterPlayer, alienPlayer);
+        super(characterPlayer, null);
     }
 }

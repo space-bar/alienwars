@@ -1,4 +1,6 @@
-package com.spacebar.alienwars.screen;
+package com.spacebar.alienwars.display;
+
+import com.spacebar.alienwars.screen.Screen;
 
 public interface DisplayExplorer {
 

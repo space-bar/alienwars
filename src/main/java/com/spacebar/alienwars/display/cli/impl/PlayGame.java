@@ -1,13 +1,11 @@
-package com.spacebar.alienwars.screen.cli.display;
+package com.spacebar.alienwars.display.cli.impl;
 
 import com.spacebar.alienwars.game.Game;
 import com.spacebar.alienwars.player.Player;
-import com.spacebar.alienwars.screen.AbstractDisplay;
-import com.spacebar.alienwars.screen.Displayable;
 import com.spacebar.alienwars.screen.Screen;
-import com.spacebar.alienwars.screen.cli.AbstractCLIDisplay;
+import com.spacebar.alienwars.display.cli.AbstractCLIDisplay;
 
-public class StartGame extends AbstractCLIDisplay {
+public class PlayGame extends AbstractCLIDisplay {
 
     @Override
     public void display(Screen screen) {
@@ -42,6 +40,7 @@ public class StartGame extends AbstractCLIDisplay {
         drawHeader(screen, APP_BANNER);
         Game game = screen.getGame();
         Player characterPlayer = game.getCharacterPlayer();
+        //characterPlayer.getSpaceship().
 
     }
 }

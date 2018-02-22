@@ -1,10 +1,9 @@
-package com.spacebar.alienwars.screen.cli.display;
+package com.spacebar.alienwars.display.cli.impl;
 
-import com.spacebar.alienwars.screen.DisplayType;
-import com.spacebar.alienwars.screen.Displayable;
-import com.spacebar.alienwars.screen.IOStream;
+import com.spacebar.alienwars.display.DisplayType;
+import com.spacebar.alienwars.io.IOStream;
 import com.spacebar.alienwars.screen.Screen;
-import com.spacebar.alienwars.screen.cli.AbstractCLIDisplay;
+import com.spacebar.alienwars.display.cli.AbstractCLIDisplay;
 
 import java.util.InputMismatchException;
 
@@ -42,7 +41,7 @@ public class About extends AbstractCLIDisplay {
         this.readIntInput(screen, (no) -> {
             switch (no) {
                 case 1:
-                    screen.getDisplayExplorer().next(screen, DisplayType.START_GAME);
+                    screen.getDisplayExplorer().next(screen, DisplayType.NEW_GAME);
                     break;
                 case 2:
                     break;

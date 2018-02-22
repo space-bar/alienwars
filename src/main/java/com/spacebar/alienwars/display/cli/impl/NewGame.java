@@ -1,6 +1,6 @@
-package com.spacebar.alienwars.screen.cli.display;
+package com.spacebar.alienwars.display.cli.impl;
 
-import com.spacebar.alienwars.screen.Displayable;
+import com.spacebar.alienwars.display.Displayable;
 import com.spacebar.alienwars.screen.Screen;
 
 public class NewGame implements Displayable {

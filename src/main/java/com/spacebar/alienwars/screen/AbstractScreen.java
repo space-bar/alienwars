@@ -1,6 +1,9 @@
 package com.spacebar.alienwars.screen;
 
 
+import com.spacebar.alienwars.display.DefaultDisplayExplorer;
+import com.spacebar.alienwars.display.DisplayExplorer;
+
 public abstract class AbstractScreen implements Screen {
 
     private final int width;

@@ -1,5 +1,11 @@
 package com.spacebar.alienwars.spaceship.cli;
 
 
-public class DestroyerSpaceship {
+import com.spacebar.alienwars.spaceship.AbstractSpaceship;
+
+public class DestroyerSpaceship extends AbstractSpaceship {
+
+    public DestroyerSpaceship() {
+        super("DESTROYER",true);
+    }
 }

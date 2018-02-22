@@ -1,4 +1,4 @@
-package com.spacebar.alienwars.screen;
+package com.spacebar.alienwars.io;
 
 public interface IOStream<T> {
 

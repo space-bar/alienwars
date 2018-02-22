@@ -1,4 +1,7 @@
-package com.spacebar.alienwars.screen;
+package com.spacebar.alienwars.display;
+
+import com.spacebar.alienwars.io.IOStream;
+import com.spacebar.alienwars.screen.Screen;
 
 import java.util.Optional;
 import java.util.Stack;
@@ -45,9 +48,9 @@ public class DefaultDisplayExplorer implements DisplayExplorer {
     private Optional<Displayable> getDisplay(Screen screen, DisplayType displayType) {
         Displayable display = null;
         if (screen != null) {
-            DisplayProvider displayProvider = screen.getDisplayProvider();
-            if (displayProvider != null) {
-                display = displayProvider.getDisplay(displayType);
+            DisplayFactory displayFactory = screen.getDisplayFactory();
+            if (displayFactory != null) {
+                display = displayFactory.getDisplay(displayType);
             }
         }
         return display != null ? Optional.of(display) : Optional.empty();

@@ -1,7 +1,6 @@
-package com.spacebar.alienwars.screen.cli;
+package com.spacebar.alienwars.io.cli;
 
-import com.spacebar.alienwars.screen.IOStream;
-import com.sun.java.swing.plaf.windows.resources.windows;
+import com.spacebar.alienwars.io.IOStream;
 
 import java.io.Console;
 import java.io.IOException;

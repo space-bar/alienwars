@@ -1,7 +1,10 @@
 package com.spacebar.alienwars.screen;
 
 
+import com.spacebar.alienwars.display.DisplayExplorer;
+import com.spacebar.alienwars.display.DisplayFactory;
 import com.spacebar.alienwars.game.Game;
+import com.spacebar.alienwars.io.IOStream;
 
 public interface Screen {
 
@@ -13,7 +16,7 @@ public interface Screen {
 
     IOStream getIOStream();
 
-    DisplayProvider getDisplayProvider();
+    DisplayFactory getDisplayFactory();
 
     DisplayExplorer getDisplayExplorer();
 

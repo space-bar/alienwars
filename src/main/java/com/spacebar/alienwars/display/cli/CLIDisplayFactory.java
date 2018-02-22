@@ -1,11 +1,11 @@
-package com.spacebar.alienwars.screen.cli;
+package com.spacebar.alienwars.display.cli;
 
-import com.spacebar.alienwars.screen.DisplayProvider;
-import com.spacebar.alienwars.screen.DisplayType;
-import com.spacebar.alienwars.screen.Displayable;
-import com.spacebar.alienwars.screen.cli.display.*;
+import com.spacebar.alienwars.display.DisplayFactory;
+import com.spacebar.alienwars.display.DisplayType;
+import com.spacebar.alienwars.display.Displayable;
+import com.spacebar.alienwars.display.cli.impl.*;
 
-public class CLIDisplayProvider implements DisplayProvider {
+public class CLIDisplayFactory implements DisplayFactory {
 
     private Displayable homeDisplay;
 
@@ -36,8 +36,8 @@ public class CLIDisplayProvider implements DisplayProvider {
                 case LOAD_SAVED_GAME:
                     return getLoadSavedGameDisplay();
 
-                case START_GAME:
-                    return getStartGameDisplay();
+                case PLAY_GAME:
+                    return getPlayGameDisplay();
 
                 case SELECT_SPACE_SHIP:
                     return getSelectSpaceShipDisplay();
@@ -62,9 +62,9 @@ public class CLIDisplayProvider implements DisplayProvider {
     }
 
 
-    private Displayable getStartGameDisplay() {
+    private Displayable getPlayGameDisplay() {
         if (startGameDisplay == null) {
-            startGameDisplay = new StartGame();
+            startGameDisplay = new PlayGame();
         }
         return startGameDisplay;
     }

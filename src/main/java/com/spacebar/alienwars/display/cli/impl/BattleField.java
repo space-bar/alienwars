@@ -1,8 +1,7 @@
-package com.spacebar.alienwars.screen.cli.display;
+package com.spacebar.alienwars.display.cli.impl;
 
-import com.spacebar.alienwars.screen.IOStream;
 import com.spacebar.alienwars.screen.Screen;
-import com.spacebar.alienwars.screen.cli.AbstractCLIDisplay;
+import com.spacebar.alienwars.display.cli.AbstractCLIDisplay;
 
 public class BattleField extends AbstractCLIDisplay {
 

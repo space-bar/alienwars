@@ -1,15 +1,11 @@
-package com.spacebar.alienwars.screen.cli;
+package com.spacebar.alienwars.display.cli;
 
-import com.spacebar.alienwars.screen.DisplayType;
-import com.spacebar.alienwars.screen.Displayable;
-import com.spacebar.alienwars.screen.IOStream;
+import com.spacebar.alienwars.display.Displayable;
+import com.spacebar.alienwars.io.IOStream;
 import com.spacebar.alienwars.screen.Screen;
 
-import java.io.Console;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.InputMismatchException;
-import java.util.OptionalInt;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
