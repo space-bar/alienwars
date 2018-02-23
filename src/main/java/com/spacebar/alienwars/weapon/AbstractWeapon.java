@@ -24,7 +24,7 @@ public abstract class AbstractWeapon implements Weapon {
     @Override
     public boolean fire() {
         if (canFire() && this.avaliableRounds > 0) {
-            this.avaliableRounds = this.avaliableRounds - 1;
+            this.avaliableRounds--;
         }
         return false;
     }

@@ -1,7 +1,7 @@
 package com.spacebar.alienwars.display.cli;
 
 import com.spacebar.alienwars.display.DisplayType;
-import com.spacebar.alienwars.display.Displayable;
+import com.spacebar.alienwars.display.Display;
 import com.spacebar.alienwars.io.IOStream;
 import com.spacebar.alienwars.screen.Screen;
 
@@ -10,7 +10,11 @@ import java.util.InputMismatchException;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-public abstract class AbstractCLIDisplay implements Displayable {
+public abstract class AbstractCLIDisplay implements Display {
+
+    public static final String NEW_LINE = "\n";
+
+    public static final String WHITE_SPACE = " ";
 
     public static final String APP_BANNER = "" +
             "   _____   .__   .__                   __      __                       \n" +
@@ -41,8 +45,8 @@ public abstract class AbstractCLIDisplay implements Displayable {
     protected <T> void readInput(Screen screen, Consumer<T> fnx) {
         IOStream r = screen.getIOStream();
         try {
-            T no = (T) r.read();
-            fnx.accept(no);
+            T input = (T) r.read();
+            fnx.accept(input);
         } catch (InputMismatchException ime) {
             readInput(screen, fnx);
         }
@@ -51,8 +55,8 @@ public abstract class AbstractCLIDisplay implements Displayable {
     protected void readIntInput(Screen screen, Consumer<Integer> fnx) {
         IOStream r = screen.getIOStream();
         try {
-            int no = r.readInt();
-            fnx.accept(no);
+            int input = r.readInt();
+            fnx.accept(input);
         } catch (InputMismatchException ime) {
             readIntInput(screen, fnx);
         }
@@ -115,22 +119,20 @@ public abstract class AbstractCLIDisplay implements Displayable {
         int maxHeaderWidth = computeMaxWidth(headers);
         width = Math.max(width, maxHeaderWidth);
 
+        String lines = contents(width - 2, '=');
         String padding = contents((width - maxHeaderWidth) / 2, ' ');
+
         Arrays.stream(headers).forEach((header) -> {
             screen.getIOStream().writeLine(padding + header);
         });
-
-        String lines = contents(width, '=', '+', '+');
-        screen.getIOStream().write(lines);
-
+        screen.getIOStream().writeLine('+' + lines + '+');
     }
 
     protected void drawBody(Screen screen, String... body) {
         int _width = screen.getWidth();
-        int maxHeaderWidth = computeMaxWidth(body);
-        int width = Math.max(_width, maxHeaderWidth);
-        String padding = contents((width - maxHeaderWidth) / 2, ' ');
-        screen.getIOStream().writeLine("");
+        int maxBodyWidth = computeMaxWidth(body);
+        int width = Math.max(_width, maxBodyWidth);
+        String padding = contents((width - maxBodyWidth) / 2, ' ');
         Arrays.stream(body).forEach((b) -> {
             int rightPaddingLength = (width - (padding.length() + b.length())) - 2;
             String rightPadding = contents(rightPaddingLength, ' ');
@@ -143,25 +145,17 @@ public abstract class AbstractCLIDisplay implements Displayable {
         int maxHeaderWidth = computeMaxWidth(footers);
         width = Math.max(width, maxHeaderWidth);
 
-        String lines = contents(width, '=', '+', '+');
-        screen.getIOStream().writeLine(lines);
-
+        String lines = contents(width - 2, '=');
         String padding = contents((width - maxHeaderWidth) / 2, ' ');
 
-       /* String[] logo =APP_LOGO.split("\\n");
-        String padding = contents((width - maxHeaderWidth) / 2, ' ');
-        Arrays.stream(APP_LOGO.split("\\n")).forEach((footer) -> {
-            screen.getIOStream().writeLine(padding + footer);
-        });*/
-
+        screen.getIOStream().writeLine('+' + lines + '+');
         Arrays.stream(footers).forEach((footer) -> {
             screen.getIOStream().writeLine(padding + footer);
         });
-
-
     }
 
-    private String contents(int length, char pixel) {
+
+    protected String contents(int length, char pixel) {
         StringBuilder sb = new StringBuilder();
         IntStream.range(0, length).forEach(i -> {
             sb.append(pixel);
@@ -169,7 +163,14 @@ public abstract class AbstractCLIDisplay implements Displayable {
         return sb.toString();
     }
 
-    private String contents(int length, char pixel, char prefix, char suffix) {
+    protected String contents(int length, String content) {
+        StringBuilder sb = new StringBuilder();
+        IntStream.range(0, length).forEach(i -> {
+            sb.append(content);
+        });
+        return sb.toString();
+    }
+  /*  private String contents(int length, char pixel, char prefix, char suffix) {
         StringBuilder sb = new StringBuilder();
         IntStream.range(0, length).forEach(i -> {
             if (i == 0) {
@@ -181,7 +182,7 @@ public abstract class AbstractCLIDisplay implements Displayable {
             }
         });
         return sb.toString();
-    }
+    }*/
 
     protected int computeMaxWidth(String... values) {
         return Arrays.stream(values)

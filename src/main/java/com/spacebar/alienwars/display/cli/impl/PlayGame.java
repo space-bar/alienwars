@@ -1,8 +1,8 @@
 package com.spacebar.alienwars.display.cli.impl;
 
 import com.spacebar.alienwars.display.DisplayType;
-import com.spacebar.alienwars.exception.GameInitializationException;
 import com.spacebar.alienwars.game.Game;
+import com.spacebar.alienwars.game.cli.CLIGame;
 import com.spacebar.alienwars.player.Player;
 import com.spacebar.alienwars.player.PlayerType;
 import com.spacebar.alienwars.player.cli.CLIPlayer;
@@ -10,10 +10,16 @@ import com.spacebar.alienwars.screen.Screen;
 import com.spacebar.alienwars.display.cli.AbstractCLIDisplay;
 import com.spacebar.alienwars.spaceship.SpaceshipType;
 
+import java.awt.*;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 public class PlayGame extends AbstractCLIDisplay {
+
+    private Map<Integer, Player[]> coordinateMap;
 
     public PlayGame() {
         super(DisplayType.PLAY_GAME);
@@ -22,82 +28,162 @@ public class PlayGame extends AbstractCLIDisplay {
     @Override
     public void display(Screen screen) {
         try {
-            renderGame(screen);
-        } catch (GameInitializationException e) {
+            Game game = screen.getGame();
+            //final Player characterPlayer = game.getCharacterPlayer();
+            //characterPlayer.getSpaceship().
+
+            Player characterPlayer = screen.getPlayerFactory().createPlayer(PlayerType.CHARACTER, "Player");
+            characterPlayer.setSpaceship(screen.getSpaceshipFactory().createSpaceship(SpaceshipType.ORION));
+
+            CLIPlayer player = (CLIPlayer) screen.getPlayerFactory().createPlayer(PlayerType.ALIEN, null);
+            player.setSpaceship(screen.getSpaceshipFactory().createSpaceship(SpaceshipType.DESTROYER));
+            CLIPlayer player2 = (CLIPlayer) screen.getPlayerFactory().createPlayer(PlayerType.ALIEN, null);
+            player2.setSpaceship(screen.getSpaceshipFactory().createSpaceship(SpaceshipType.DESTROYER));
+            ((CLIGame) game).setAlienPlayers(new Player[]{player, player2});
+            ((CLIGame) game).setCharacterPlayer(characterPlayer);
+            screen.setGame(game);
+
+            coordinateMap = initCoordinateMap(screen);
+            renderGame(screen, 0);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-       /* Game game = screen.getGame();
-        if (game == null)
-            return;
-        game.getCharacterPlayer();*/
-
-     /*   IOStream r = screen.getIOStream();
-        r.writeLine(CLIAbstractDisplay.APP_LOGO);
-        r.writeLine("===========================================================\n");
-
-        r.writeLine("|       What do you want to do ?                           |");
-        r.writeLine("|       Type a number and hit enter.                       |");
-        r.writeLine("|                                                          |");
-        r.writeLine("|       1. Start Game                                      |");
-        r.writeLine("|       2. Help                                            |");
-        r.writeLine("|       3. Exit                                            |");
-
-        r.writeLine("\n===========================================================\n");
-
-        r.write("Enter Menu Number :");*/
-
-        //readInput(screen);
-        //System.out.print("\033[31;1mHello\033[0m, \033[32;1;2mworld!\033[0m");
-        //System.out.println("\033[31mRed\033[32m, Green\033[33m, Yellow\033[34m, Blue\033[0m");
     }
 
-    private final static String[] ALIEN_NAMES = {"DARK VADER", "CRUSHER", "SKY BLAZER", "INVADER"};
 
-    private void renderGame(Screen screen) throws GameInitializationException {
+    private void renderGame(Screen screen, int steps) {
+        StringBuilder battleField = drawBattleField(screen, steps);
 
+        drawHeader(screen, APP_BANNER.split(NEW_LINE));
+        screen.getIOStream().write(battleField.toString());
+        drawFooter(screen, APP_LOGO.split(NEW_LINE));
+
+        readInput(screen);
+    }
+
+
+    private Map<Integer, Player[]> initCoordinateMap(Screen screen) {
         Game game = screen.getGame();
-        final Player characterPlayer = game.getCharacterPlayer();
-        //characterPlayer.getSpaceship().
+        Player[] alienPlayers = game.getAlienPlayers();
+        Player characterPlayer = game.getCharacterPlayer();
 
-        CLIPlayer player = (CLIPlayer) screen.getPlayerFactory().createPlayer(PlayerType.ALIEN, null);
-        player.setSpaceship(screen.getSpaceshipFactory().createSpaceship(SpaceshipType.DESTROYER));
-        CLIPlayer player2 = (CLIPlayer) screen.getPlayerFactory().createPlayer(PlayerType.ALIEN, null);
-        player2.setSpaceship(screen.getSpaceshipFactory().createSpaceship(SpaceshipType.DESTROYER));
+        int width = screen.getWidth();
+        int height = screen.getHeight();
 
-        final Player[] alienPlayers = new Player[]{player, player2};//game.getAlienPlayers();
-        /*if (characterPlayer == null || alienPlayers == null || alienPlayers.length == 0) {
-            throw new GameInitializationException();
-        }*/
-        drawHeader(screen, APP_BANNER.split("\n"));
-        StringBuilder sb = new StringBuilder();
-        for (Player alienPlayer : alienPlayers) {
-            String display = alienPlayer.getSpaceship().getDescription();
+
+        //compute a random positon for alien spaceship
+        int maxX = width / alienPlayers.length;
+        int x = 0;
+        Random random = new Random();
+        for (int index = 0; index < alienPlayers.length; index++) {
+            Point coordinate = alienPlayers[index].getSpaceship().getCoordinate();
+            String display = alienPlayers[index].getSpaceship().getDisplay();
+            int m = maxX - display.length();
+            m = Math.max(m, 1);
+            coordinate.x = random.nextInt(m * (index + 1) - x) + x;
+            coordinate.y = 0;
+            x = coordinate.x + x;
+
+            System.out.println(coordinate.x);
+
+        }
+
+        Point coordinate = characterPlayer.getSpaceship().getCoordinate();
+        coordinate.x = (width - characterPlayer.getSpaceship().getDisplay().length()) / 2;
+        coordinate.y = height - 1;
+
+        Map<Integer, Player[]> positionMap = new HashMap<>();
+        positionMap.put(0, alienPlayers);
+        positionMap.put(height - 1, new Player[]{characterPlayer});
+
+        return positionMap;
+    }
+
+
+    private StringBuilder drawBattleField(Screen screen, int step) {
+        int height = screen.getHeight();
+        StringBuilder data = new StringBuilder();
+        Map<Integer, Player[]> positionMap = new HashMap<>();
+        //step = step > height ? height : step;
+        IntStream.range(step, height + step).forEach(index -> {
+            Player[] players = coordinateMap.get(index - step);
+            if (players != null) {
+                Arrays.stream(players)
+                        .filter(player -> PlayerType.ALIEN.equals(player.getPlayerType()))
+                        .forEach(player -> {
+                            Point coordinate = player.getSpaceship().getCoordinate();
+                            coordinate.y = index;
+                        });
+                if (height + step != index)
+                    positionMap.put(index, players);
+                else {
+                    //positionMap.put(index, players);
+                }
+            }
+            StringBuilder xData = drawXPosition(screen, players);
+            data.append(xData);
+            data.append(NEW_LINE);
+
+        });
+        coordinateMap.clear();
+        coordinateMap.putAll(positionMap);
+        return data;
+    }
+
+    private StringBuilder drawXPosition(Screen screen, Player... players) {
+        int width = screen.getWidth();
+        StringBuilder sb = new StringBuilder("|");
+        for (int row = 0; row < width - 2; row++) {
+            String display = WHITE_SPACE;
+            if (players != null) {
+                for (Player player : players) {
+                    Point coordinate = player.getSpaceship().getCoordinate();
+                    if (coordinate.x == row) {
+                        display = player.getSpaceship().getDisplay();
+                        row = row + display.length() - 1;
+                        break;
+                    }
+                }
+            }
             sb.append(display);
         }
-        screen.getIOStream().writeLine("");
-        screen.getIOStream().writeLine(sb.toString());
+        sb.append("|");
+        return sb;
     }
 
-    /* protected void drawAlien(Screen screen, String... headers) {
-         int width = screen.getWidth();
-         int maxHeaderWidth = computeMaxWidth(headers);
-         width = Math.max(width, maxHeaderWidth);
 
-         String padding = contents((width - maxHeaderWidth) / 2, ' ');
-         Arrays.stream(headers).forEach((header) -> {
-             screen.getIOStream().writeLine(padding + header);
-         });
+    private void readInput(Screen screen) {
+        this.readInput(screen, (String input) -> {
+            input = input != null ? input.trim() : null;
+            int steps = 0;
+            char cmd = input.charAt(0);
+            if (cmd == 'r' || cmd == 'R') {
+                steps = countRepeativeLetter(input, 'r');
+                System.out.println("steps= in r" + (cmd != Character.toLowerCase('r')));
+            } else if (cmd == 'l' || cmd == 'L') {
+                steps = countRepeativeLetter(input, 'l');
+                steps = Math.negateExact(steps);
+            } else if ("exit".equalsIgnoreCase(input)) {
+                screen.getDisplayExplorer().previous(screen);
+                return;
+            }
+            System.out.println("steps=" + steps);
+            System.out.println("steps=" + cmd);
+            renderGame(screen, steps);
 
-         String lines = contents(width, '=', '+', '+');
-         screen.getIOStream().write(lines);
-
-     }
- */
-    private String contents(int length, String pixel) {
-        StringBuilder sb = new StringBuilder();
-        IntStream.range(0, length).forEach(i -> {
-            sb.append(pixel);
         });
-        return sb.toString();
     }
+
+    private int countRepeativeLetter(String input, char val) {
+        char[] chars = input.toCharArray();
+        int x = 0;
+        for (char value : chars) {
+            if (value != Character.toUpperCase(val) && value != Character.toLowerCase(val)) {
+                return x;
+            }
+            x++;
+        }
+        return x;
+    }
+
 }

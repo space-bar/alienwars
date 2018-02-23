@@ -9,19 +9,19 @@ import java.util.Stack;
 public class DefaultDisplayExplorer implements DisplayExplorer {
 
     private final Stack<DisplayType> explorerStack = new Stack<>();
-    private Displayable current;
+    private Display current;
 
 
     @Override
     public void previous(Screen screen) {
         if (!explorerStack.empty()) {
             DisplayType displayType = explorerStack.pop();
-            Optional<Displayable> displayableOptional = getDisplay(screen, displayType);
+            Optional<Display> displayableOptional = getDisplay(screen, displayType);
             if (displayableOptional.isPresent()) {
-                Displayable displayable = displayableOptional.get();
-                current = displayable;
+                Display display = displayableOptional.get();
+                current = display;
                 clearScreen(screen);
-                displayable.display(screen);
+                display.display(screen);
 
             }
         }
@@ -29,24 +29,26 @@ public class DefaultDisplayExplorer implements DisplayExplorer {
 
     @Override
     public void next(Screen screen, DisplayType displayType) {
-        Optional<Displayable> displayableOptional = getDisplay(screen, displayType);
+        Optional<Display> displayableOptional = getDisplay(screen, displayType);
         if (displayableOptional.isPresent()) {
-            Displayable displayable = displayableOptional.get();
-            explorerStack.push(displayType);
-            current = displayable;
+            Display display = displayableOptional.get();
+            if(current!=null) {
+                explorerStack.push(current.getDisplayType());
+            }
+            current = display;
             clearScreen(screen);
-            displayable.display(screen);
+            display.display(screen);
 
         }
     }
 
     @Override
-    public Displayable current() {
+    public Display current() {
         return current;
     }
 
-    private Optional<Displayable> getDisplay(Screen screen, DisplayType displayType) {
-        Displayable display = null;
+    private Optional<Display> getDisplay(Screen screen, DisplayType displayType) {
+        Display display = null;
         if (screen != null) {
             DisplayFactory displayFactory = screen.getDisplayFactory();
             if (displayFactory != null) {

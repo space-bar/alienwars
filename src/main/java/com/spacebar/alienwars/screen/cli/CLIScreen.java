@@ -73,6 +73,7 @@ public class CLIScreen extends AbstractScreen {
 
     @Override
     public Game getGame() {
+        game = super.getGame();
         if (game == null) {
             game = new CLIGame(null, null);
         }

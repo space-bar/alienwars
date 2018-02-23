@@ -16,5 +16,5 @@ public interface Spaceship {
 
     String getSpaceshipName();
 
-    String getDescription();
+    String getDisplay();
 }

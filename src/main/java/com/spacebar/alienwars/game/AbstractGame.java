@@ -6,8 +6,8 @@ import com.spacebar.alienwars.player.Player;
 
 public class AbstractGame implements Game {
 
-    private final Player characterPlayer;
-    private final Player[] alienPlayers;
+    private  Player characterPlayer;
+    private  Player[] alienPlayers;
 
     public AbstractGame(Player characterPlayer, Player[] alienPlayers) {
         this.characterPlayer = characterPlayer;
@@ -22,6 +22,14 @@ public class AbstractGame implements Game {
     @Override
     public Player[] getAlienPlayers() {
         return alienPlayers;
+    }
+
+    public void setCharacterPlayer(Player characterPlayer) {
+        this.characterPlayer = characterPlayer;
+    }
+
+    public void setAlienPlayers(Player[] alienPlayers) {
+        this.alienPlayers = alienPlayers;
     }
 
     @Override

@@ -15,10 +15,7 @@ public interface Screen {
 
     int getHeight();
 
-    boolean isWindows();
-
     IOStream getIOStream();
-
 
     DisplayExplorer getDisplayExplorer();
 
@@ -31,4 +28,6 @@ public interface Screen {
     WeaponFactory getWeaponFactory();
 
     Game getGame();
+
+    void setGame(Game game);
 }

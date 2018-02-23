@@ -2,27 +2,27 @@ package com.spacebar.alienwars.display.cli;
 
 import com.spacebar.alienwars.display.DisplayFactory;
 import com.spacebar.alienwars.display.DisplayType;
-import com.spacebar.alienwars.display.Displayable;
+import com.spacebar.alienwars.display.Display;
 import com.spacebar.alienwars.display.cli.impl.*;
 
 public class CLIDisplayFactory implements DisplayFactory {
 
-    private Displayable homeDisplay;
+    private Display homeDisplay;
 
-    private Displayable startGameDisplay;
+    private Display startGameDisplay;
 
-    private Displayable startNewGameDisplay;
+    private Display startNewGameDisplay;
 
-    private Displayable loadSavedGameDisplay;
+    private Display loadSavedGameDisplay;
 
-    private Displayable selectSpaceShipDisplay;
+    private Display selectSpaceShipDisplay;
 
-    private Displayable helpDisplay;
+    private Display helpDisplay;
 
-    private Displayable aboutDisplay;
+    private Display aboutDisplay;
 
 
-    public Displayable getDisplay(DisplayType displayType) {
+    public Display getDisplay(DisplayType displayType) {
         if (displayType != null) {
 
             switch (displayType) {
@@ -54,7 +54,7 @@ public class CLIDisplayFactory implements DisplayFactory {
     }
 
 
-    private Displayable getHomeDisplay() {
+    private Display getHomeDisplay() {
         if (homeDisplay == null) {
             homeDisplay = new Home();
         }
@@ -62,35 +62,35 @@ public class CLIDisplayFactory implements DisplayFactory {
     }
 
 
-    private Displayable getPlayGameDisplay() {
+    private Display getPlayGameDisplay() {
         if (startGameDisplay == null) {
             startGameDisplay = new PlayGame();
         }
         return startGameDisplay;
     }
 
-    private Displayable getNewGameDisplay() {
+    private Display getNewGameDisplay() {
         if (startNewGameDisplay == null) {
             startNewGameDisplay = new NewGame();
         }
         return startNewGameDisplay;
     }
 
-    private Displayable getLoadSavedGameDisplay() {
+    private Display getLoadSavedGameDisplay() {
         if (loadSavedGameDisplay == null) {
             loadSavedGameDisplay = new LoadSavedGame();
         }
         return loadSavedGameDisplay;
     }
 
-    private Displayable getSelectSpaceShipDisplay() {
+    private Display getSelectSpaceShipDisplay() {
         if (selectSpaceShipDisplay == null) {
             selectSpaceShipDisplay = new SelectSpaceShip();
         }
         return selectSpaceShipDisplay;
     }
 
-    private Displayable getHelpDisplay() {
+    private Display getHelpDisplay() {
         if (helpDisplay == null) {
             helpDisplay = new Help();
         }
@@ -98,7 +98,7 @@ public class CLIDisplayFactory implements DisplayFactory {
     }
 
 
-    private Displayable getAboutDisplay() {
+    private Display getAboutDisplay() {
         if (aboutDisplay == null) {
             aboutDisplay = new About();
         }

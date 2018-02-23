@@ -18,16 +18,16 @@ public class CLISpaceshipFactory implements SpaceshipFactory {
                     return new CLISpaceship(SpaceshipType.ORION, "(-^-)");
 
                 case STARFLEET:
-                    return new CLISpaceship(SpaceshipType.STARFLEET, "/-^-\\");
+                    return new CLISpaceship(SpaceshipType.STARFLEET, "[-/-^-\\-]");
 
                 case CYCLON:
-                    return new CLISpaceship(SpaceshipType.CYCLON, "\\|-^-|/");
+                    return new CLISpaceship(SpaceshipType.CYCLON, "\\-o_o-/");
 
                 case DESTROYER:
-                    return new CLISpaceship(SpaceshipType.DESTROYER, "\\-\\/-/");
+                    return new CLISpaceship(SpaceshipType.DESTROYER, "{-\\-o_o-/-}");
             }
             /*return display != null
-                    ? new CLISpaceship(spaceshipType, display)
+                    ? new CLISpaceship(spaceshipType, dissplay)
                     : new CLISpaceship(spaceshipType);*/
         }
         return null;

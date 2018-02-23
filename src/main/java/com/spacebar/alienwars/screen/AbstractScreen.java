@@ -3,6 +3,7 @@ package com.spacebar.alienwars.screen;
 
 import com.spacebar.alienwars.display.DefaultDisplayExplorer;
 import com.spacebar.alienwars.display.DisplayExplorer;
+import com.spacebar.alienwars.game.Game;
 import com.spacebar.alienwars.spaceship.SpaceshipFactory;
 
 public abstract class AbstractScreen implements Screen {
@@ -11,16 +12,12 @@ public abstract class AbstractScreen implements Screen {
 
     private final int height;
 
-    private boolean windows;
+
+    private Game game;
 
 
     private DisplayExplorer displayExplorer;
 
-
-    {
-        String os = System.getProperty("os.name");
-        windows = os != null && os.contains("Windows");
-    }
 
     public AbstractScreen(int width, int height) {
         this.width = width;
@@ -38,12 +35,6 @@ public abstract class AbstractScreen implements Screen {
     }
 
     @Override
-    public boolean isWindows() {
-        return windows;
-    }
-
-
-    @Override
     public DisplayExplorer getDisplayExplorer() {
         if (displayExplorer == null) {
             displayExplorer = new DefaultDisplayExplorer();
@@ -51,5 +42,13 @@ public abstract class AbstractScreen implements Screen {
         return displayExplorer;
     }
 
+    @Override
+    public Game getGame() {
+        return game;
+    }
 
+    @Override
+    public void setGame(Game game) {
+        this.game = game;
+    }
 }

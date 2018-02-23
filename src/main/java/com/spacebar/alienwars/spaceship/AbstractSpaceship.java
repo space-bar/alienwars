@@ -11,7 +11,7 @@ public abstract class AbstractSpaceship implements Spaceship {
 
     private Point coordinate;
 
-    private String description;
+    private String display;
 
     private String spaceshipName;
 
@@ -50,12 +50,12 @@ public abstract class AbstractSpaceship implements Spaceship {
     }
 
     @Override
-    public String getDescription() {
-        return description;
+    public String getDisplay() {
+        return display;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDisplay(String display) {
+        this.display = display;
     }
 
     @Override

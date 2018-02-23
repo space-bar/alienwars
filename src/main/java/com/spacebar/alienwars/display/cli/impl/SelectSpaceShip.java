@@ -1,7 +1,6 @@
 package com.spacebar.alienwars.display.cli.impl;
 
 import com.spacebar.alienwars.display.DisplayType;
-import com.spacebar.alienwars.display.Displayable;
 import com.spacebar.alienwars.display.cli.AbstractCLIDisplay;
 import com.spacebar.alienwars.game.Game;
 import com.spacebar.alienwars.game.cli.CLIGame;
