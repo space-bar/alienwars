@@ -8,6 +8,13 @@ import com.spacebar.alienwars.io.IOStream;
 import com.spacebar.alienwars.player.Player;
 import com.spacebar.alienwars.player.PlayerType;
 import com.spacebar.alienwars.screen.Screen;
+import com.spacebar.alienwars.spaceship.Spaceship;
+import com.spacebar.alienwars.spaceship.SpaceshipType;
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
+import java.util.Arrays;
+import java.util.InputMismatchException;
+import java.util.stream.IntStream;
 
 public class SelectSpaceShip extends AbstractCLIDisplay {
 
@@ -26,38 +33,63 @@ public class SelectSpaceShip extends AbstractCLIDisplay {
     @Override
     public void display(Screen screen) {
         IOStream r = screen.getIOStream();
-        drawHeader(screen, header.split("\\n"));
-        drawBody(screen,
-                "OK " + screen.getGame().getCharacterPlayer().getPlayerName(),
-                "lets get you a spaceship",
-                "Select a spaceship for the list below",
-                "Enter a number and hit enter.",
-                " ",
-                "1. Play",
-                "2. Load Saved Game",
-                "3. Help",
-                "4. About",
-                "5. Back");
-        drawFooter(screen, APP_LOGO.split("\\n"));
-        r.writeLine("Enter :");
+        drawHeader(screen, header.split(NEW_LINE));
+
+        drawBody(screen, buildBody(screen.getGame().getCharacterPlayer().getPlayerName()));
+
+        drawFooter(screen, APP_LOGO.split(NEW_LINE));
 
         readInput(screen);
     }
 
+    private String[] buildBody(String playerName) {
+        String[] instructions = {"OK " + playerName,
+                "lets get you a spaceship",
+                "Select a spaceship for the list below",
+                "Enter a number and hit enter.",
+                "Or just hit enter to go back to Main Menu"};
+        String[] ships = new String[CHARACTER_SPACESHIP_TYPES.length];
+        IntStream.range(0, CHARACTER_SPACESHIP_TYPES.length).forEach(index -> {
+            ships[0] = (index + 1) + "." + WHITE_SPACE + CHARACTER_SPACESHIP_TYPES[index].name();
+        });
+
+        String[] body = new String[instructions.length + ships.length + 1];
+        System.arraycopy(instructions, 0, body, 0, instructions.length);
+        System.arraycopy(ships, 0, body, instructions.length, ships.length);
+
+        return body;
+    }
+
     private void readInput(Screen screen) {
-        this.readInput(screen, (String name) -> {
-            name = name != null ? name.trim() : null;
+        screen.getIOStream().writeLine("Enter Number :");
+        this.readInput(screen, (String input) -> {
+            input = input != null ? input.trim() : null;
 
-            if (name == null || name.isEmpty()) {
+            if (input == null || input.isEmpty()) {
                 screen.getDisplayExplorer().previous(screen);
-            } else if (name.length() > 2) {
-                Player player = screen.getPlayerFactory().createPlayer(PlayerType.CHARACTER, name);
-                Game game = new CLIGame(player, null);
-
-                screen.getDisplayExplorer().next(screen, DisplayType.SELECT_SPACE_SHIP);
+            } else if (input.length() > 2) {
+                Integer value = convertToInt(input);
+                if (value != null && value > 0 && value <= CHARACTER_SPACESHIP_TYPES.length) {
+                    assignSpaceship(screen, CHARACTER_SPACESHIP_TYPES[value - 1]);
+                    screen.getDisplayExplorer().next(screen, DisplayType.PLAY_GAME);
+                } else {
+                    screen.getIOStream().writeLine("Come on! stop kidding arround");
+                    throw new InputMismatchException();
+                }
             } else {
-                screen.getIOStream().writeLine("Enter Name :");
+
+                throw new InputMismatchException();
             }
         });
     }
+
+    private void assignSpaceship(Screen screen, SpaceshipType spaceshipType) {
+        Player player = screen.getGame().getCharacterPlayer();
+        Spaceship spaceship = screen.getSpaceshipFactory().createSpaceship(spaceshipType);
+        player.setSpaceship(spaceship);
+    }
+
+    private static final SpaceshipType[] CHARACTER_SPACESHIP_TYPES = Arrays.stream(SpaceshipType.values())
+            .filter(spaceshipType -> !spaceshipType.isAlien())
+            .toArray(size -> new SpaceshipType[size]);
 }

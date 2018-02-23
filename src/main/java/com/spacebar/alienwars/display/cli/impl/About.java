@@ -24,36 +24,16 @@ public class About extends AbstractCLIDisplay {
     @Override
     public void display(Screen screen) {
         IOStream r = screen.getIOStream();
-        drawHeader(screen, header.split("\\n"));
-        drawBody(screen,
-                "What do you want to do ?",
-                "Type a number and hit enter.",
-                " ",
-                "1. Start New Game",
-                "2. Load Saved Game",
-                "3. Back",
-                "4. Help",
-                "5. Exit");
-        drawFooter(screen, APP_LOGO.split("\\n"));
-        r.writeLine("Enter Menu Number :");
+        drawHeader(screen, header.split(NEW_LINE));
+
+        drawFooter(screen, APP_LOGO.split(NEW_LINE));
+        r.writeLine("Enter Number:");
 
         readInput(screen);
     }
 
-
     private void readInput(Screen screen) {
-        this.readIntInput(screen, (no) -> {
-            switch (no) {
-                case 1:
-                    screen.getDisplayExplorer().next(screen, DisplayType.NEW_GAME);
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                default:
-                    throw new InputMismatchException();
-            }
+        this.readInput(screen, (String input) -> {
         });
     }
 }

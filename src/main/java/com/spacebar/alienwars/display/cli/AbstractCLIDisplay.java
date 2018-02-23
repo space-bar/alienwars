@@ -16,6 +16,13 @@ public abstract class AbstractCLIDisplay implements Display {
 
     public static final String WHITE_SPACE = " ";
 
+    public static final String ERROR_RABBIT = "" +
+            "(\\_/)\n" +
+            "\n" +
+            "( •,•)\n" +
+            "\n" +
+            "(\")_(\")";
+
     public static final String APP_BANNER = "" +
             "   _____   .__   .__                   __      __                       \n" +
             "  /  _  \\  |  |  |__|  ____    ____   /  \\    /  \\_____  _______  ______\n" +
@@ -48,6 +55,7 @@ public abstract class AbstractCLIDisplay implements Display {
             T input = (T) r.read();
             fnx.accept(input);
         } catch (InputMismatchException ime) {
+            screen.getIOStream().writeLine(ERROR_RABBIT);
             readInput(screen, fnx);
         }
     }
@@ -58,61 +66,18 @@ public abstract class AbstractCLIDisplay implements Display {
             int input = r.readInt();
             fnx.accept(input);
         } catch (InputMismatchException ime) {
+            screen.getIOStream().writeLine(ERROR_RABBIT);
             readIntInput(screen, fnx);
         }
     }
 
-
-   /* public void drawx(Screen screen, String... contents) {
-        IntStream.range(0, screen.getHeight()).forEach((col) -> {
-            IntStream.range(0, screen.getWidth()).forEach((row) -> {
-                if (row == 0) {
-                    screen.getIOStream().write("=");
-                } else if (col == 0) {
-                    screen.getIOStream().write("|");
-                }
-
-            });
-        });
-    }
-
-    public void draw(Screen screen, String... contents) {
-
-        int rows = screen.getHeight();
-        int cols = screen.getWidth();
-        IntStream.range(0, rows).forEach((row) -> {
-
-            for (int col = 0; col < cols; col++) {
-                if (row == 0) {
-                    col = drawInlineContent(screen, col, "+", "=");
-                } else if (row == rows - 1) {
-                    col = drawInlineContent(screen, col, "+", "=");
-                } else {
-                    col = drawInlineContent(screen, col, " ", " ");
-
-                }
-            }
-
-        });
-    }
-
-    private int drawInlineContent(Screen screen, int colIndex, String border, String content) {
-        int cols = screen.getWidth();
-        String value;
-        if (colIndex == 0) {
-            value = border;
-        } else if (colIndex == cols - 1) {
-            value = border;
-        } else {
-            value = content;
+    protected Integer convertToInt(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException ime) {
         }
-        screen.getIOStream().write(content);
-        int index = (value != null && !value.isEmpty() ? value.length() - 1 : 0) + colIndex;
-        if (index >= cols || colIndex == cols - 1) {
-            screen.getIOStream().writeLine("");
-        }
-        return index;
-    }*/
+        return null;
+    }
 
     protected void drawHeader(Screen screen, String... headers) {
         int width = screen.getWidth();
@@ -154,7 +119,6 @@ public abstract class AbstractCLIDisplay implements Display {
         });
     }
 
-
     protected String contents(int length, char pixel) {
         StringBuilder sb = new StringBuilder();
         IntStream.range(0, length).forEach(i -> {
@@ -170,19 +134,6 @@ public abstract class AbstractCLIDisplay implements Display {
         });
         return sb.toString();
     }
-  /*  private String contents(int length, char pixel, char prefix, char suffix) {
-        StringBuilder sb = new StringBuilder();
-        IntStream.range(0, length).forEach(i -> {
-            if (i == 0) {
-                sb.append(prefix);
-            } else if (i == length - 1) {
-                sb.append(suffix);
-            } else {
-                sb.append(pixel);
-            }
-        });
-        return sb.toString();
-    }*/
 
     protected int computeMaxWidth(String... values) {
         return Arrays.stream(values)

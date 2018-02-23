@@ -11,11 +11,12 @@ import java.util.InputMismatchException;
 public class Home extends AbstractCLIDisplay {
 
     public static final String header = "" +
-            ",--.   ,--.         ,--.                                  \n" +
-            "|  |   |  |  ,---.  |  |  ,---.  ,---.  ,--,--,--.  ,---. \n" +
-            "|  |.'.|  | | .-. : |  | | .--' | .-. | |        | | .-. :\n" +
-            "|   ,'.   | \\   --. |  | \\ `--. ' '-' ' |  |  |  | \\   --.\n" +
-            "'--'   '--'  `----' `--'  `---'  `---'  `--`--`--'  `----'";
+            " __      __       .__                               \n" +
+            "/  \\    /  \\ ____ |  |   ____  ____   _____   ____  \n" +
+            "\\   \\/\\/   // __ \\|  | _/ ___\\/  _ \\ /     \\_/ __ \\ \n" +
+            " \\        /\\  ___/|  |_\\  \\__(  <_> )  Y Y  \\  ___/ \n" +
+            "  \\__/\\  /  \\___  >____/\\___  >____/|__|_|  /\\___  >\n" +
+            "       \\/       \\/          \\/            \\/     \\/";
 
     public Home() {
         super(DisplayType.HOME);
@@ -34,28 +35,14 @@ public class Home extends AbstractCLIDisplay {
                 "4. About",
                 "5. Exit");
         drawFooter(screen, APP_LOGO.split("\\n"));
-        r.writeLine("Enter Menu Number :");
 
         readInput(screen);
-
-        // r.writeLine(welcome);
-        // r.writeLine("===========================================================\n");
-      /*  r.writeLine("|       What do you want to do ?                           |");
-        r.writeLine("|       Type a number and hit enter.                       |");
-        r.writeLine("|                                                          |");
-        r.writeLine("|       1. Start New Game                                  |");
-        r.writeLine("|       2. Load Saved Game                                 |");
-        r.writeLine("|       3. Help                                            |");
-        r.writeLine("|       4. About                                           |");
-        r.writeLine("|       5. Exit                                            |");*/
-
-       /* r.writeLine("\n===========================================================\n");
-        r.write("Enter Menu Number :");*/
     }
 
     private void readInput(Screen screen) {
-        this.readIntInput(screen, (no) -> {
-            switch (no) {
+        screen.getIOStream().writeLine("Enter Menu Number :");
+        this.readIntInput(screen, (input) -> {
+            switch (input) {
                 case 1:
                     screen.getDisplayExplorer().next(screen, DisplayType.NEW_GAME);
                     break;
@@ -63,7 +50,7 @@ public class Home extends AbstractCLIDisplay {
                     screen.getDisplayExplorer().next(screen, DisplayType.LOAD_SAVED_GAME);
                     break;
                 case 3:
-                    screen.getDisplayExplorer().next(screen, DisplayType.PLAY_GAME);
+                    screen.getDisplayExplorer().next(screen, DisplayType.HELP);
                     break;
                 case 4:
                     screen.getDisplayExplorer().next(screen, DisplayType.ABOUT);
@@ -71,8 +58,10 @@ public class Home extends AbstractCLIDisplay {
                 case 5:
                     screen.getDisplayExplorer().next(screen, DisplayType.EXIT);
                     break;
-                default:
+                default: {
+                    screen.getIOStream().writeLine("I can do this all day");
                     throw new InputMismatchException();
+                }
             }
         });
     }

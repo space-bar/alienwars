@@ -28,7 +28,7 @@ public class PlayGame extends AbstractCLIDisplay {
     @Override
     public void display(Screen screen) {
         try {
-            Game game = screen.getGame();
+            /*Game game = screen.getGame();
             //final Player characterPlayer = game.getCharacterPlayer();
             //characterPlayer.getSpaceship().
 
@@ -41,7 +41,7 @@ public class PlayGame extends AbstractCLIDisplay {
             player2.setSpaceship(screen.getSpaceshipFactory().createSpaceship(SpaceshipType.DESTROYER));
             ((CLIGame) game).setAlienPlayers(new Player[]{player, player2});
             ((CLIGame) game).setCharacterPlayer(characterPlayer);
-            screen.setGame(game);
+            screen.setGame(game);*/
 
             coordinateMap = initCoordinateMap(screen);
             renderGame(screen, 0);
@@ -83,9 +83,6 @@ public class PlayGame extends AbstractCLIDisplay {
             coordinate.x = random.nextInt(m * (index + 1) - x) + x;
             coordinate.y = 0;
             x = coordinate.x + x;
-
-            System.out.println(coordinate.x);
-
         }
 
         Point coordinate = characterPlayer.getSpaceship().getCoordinate();
@@ -100,7 +97,7 @@ public class PlayGame extends AbstractCLIDisplay {
     }
 
 
-    private StringBuilder drawBattleField(Screen screen, int step) {
+   /* private StringBuilder drawBattleField(Screen screen, int step) {
         int height = screen.getHeight();
         StringBuilder data = new StringBuilder();
         Map<Integer, Player[]> positionMap = new HashMap<>();
@@ -120,7 +117,40 @@ public class PlayGame extends AbstractCLIDisplay {
                     //positionMap.put(index, players);
                 }
             }
-            StringBuilder xData = drawXPosition(screen, players);
+            StringBuilder xData = drawXPosition(screen,step, players);
+            data.append(xData);
+            data.append(NEW_LINE);
+
+        });
+        coordinateMap.clear();
+        coordinateMap.putAll(positionMap);
+        return data;
+    }*/
+
+    private StringBuilder drawBattleField(Screen screen, int step) {
+        int height = screen.getHeight();
+        StringBuilder data = new StringBuilder();
+        Map<Integer, Player[]> positionMap = new HashMap<>();
+        //step = step > height ? height : step;
+        int stepY = 1;
+        IntStream.rangeClosed(stepY, height + stepY).forEach(index -> {
+            Player[] players = coordinateMap.get(index - stepY);
+            int stepX = 0;
+            if (players != null) {
+                Arrays.stream(players)
+                        .filter(player -> PlayerType.ALIEN.equals(player.getPlayerType()))
+                        .forEach(player -> {
+                            Point coordinate = player.getSpaceship().getCoordinate();
+                            coordinate.y = index;
+                        });
+                if (height + stepY != index)
+                    positionMap.put(index, players);
+                else {
+                    stepX = step;
+                    positionMap.put(index - stepY, players);
+                }
+            }
+            StringBuilder xData = drawXPosition(screen, stepX, players);
             data.append(xData);
             data.append(NEW_LINE);
 
@@ -130,17 +160,22 @@ public class PlayGame extends AbstractCLIDisplay {
         return data;
     }
 
-    private StringBuilder drawXPosition(Screen screen, Player... players) {
-        int width = screen.getWidth();
+    private StringBuilder drawXPosition(Screen screen, int step, Player... players) {
+        int width = screen.getWidth() - 2;
         StringBuilder sb = new StringBuilder("|");
-        for (int row = 0; row < width - 2; row++) {
+        for (int x = 0; x < width; x++) {
             String display = WHITE_SPACE;
             if (players != null) {
                 for (Player player : players) {
                     Point coordinate = player.getSpaceship().getCoordinate();
-                    if (coordinate.x == row) {
+                    if (coordinate.x == x) {
                         display = player.getSpaceship().getDisplay();
-                        row = row + display.length() - 1;
+                        int displayWidth = display.length() - 1;
+                        x = x + displayWidth;
+                        if (step != 0) {
+                            int dx = coordinate.x + step;
+                            coordinate.x = dx > 0 ? Math.min(dx, width - displayWidth) : Math.max(dx, 1);
+                        }
                         break;
                     }
                 }
@@ -159,7 +194,6 @@ public class PlayGame extends AbstractCLIDisplay {
             char cmd = input.charAt(0);
             if (cmd == 'r' || cmd == 'R') {
                 steps = countRepeativeLetter(input, 'r');
-                System.out.println("steps= in r" + (cmd != Character.toLowerCase('r')));
             } else if (cmd == 'l' || cmd == 'L') {
                 steps = countRepeativeLetter(input, 'l');
                 steps = Math.negateExact(steps);
@@ -167,10 +201,7 @@ public class PlayGame extends AbstractCLIDisplay {
                 screen.getDisplayExplorer().previous(screen);
                 return;
             }
-            System.out.println("steps=" + steps);
-            System.out.println("steps=" + cmd);
             renderGame(screen, steps);
-
         });
     }
 

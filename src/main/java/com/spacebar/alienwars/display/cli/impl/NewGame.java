@@ -13,6 +13,7 @@ import com.spacebar.alienwars.spaceship.Spaceship;
 import com.spacebar.alienwars.spaceship.SpaceshipType;
 
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -20,12 +21,12 @@ import java.util.stream.IntStream;
 public class NewGame extends AbstractCLIDisplay {
 
     public static final String header = "" +
-            "__________.____       _____ _____.___._____________________ \n" +
-            "\\______   \\    |     /  _  \\\\__  |   |\\_   _____/\\______   \\\n" +
-            " |     ___/    |    /  /_\\  \\/   |   | |    __)_  |       _/\n" +
-            " |    |   |    |___/    |    \\____   | |        \\ |    |   \\\n" +
-            " |____|   |_______ \\____|__  / ______|/_______  / |____|_  /\n" +
-            "                  \\/       \\/\\/               \\/         \\/ ";
+            "_______                    ________                       \n" +
+            " \\      \\   ______  _  __  /  _____/_____    _____   ____  \n" +
+            " /   |   \\_/ __ \\ \\/ \\/ / /   \\  ___\\__  \\  /     \\_/ __ \\ \n" +
+            "/    |    \\  ___/\\     /  \\    \\_\\  \\/ __ \\|  Y Y  \\  ___/ \n" +
+            "\\____|__  /\\___  >\\/\\_/    \\______  (____  /__|_|  /\\___  >\n" +
+            "        \\/     \\/                 \\/     \\/      \\/     \\/";
 
     public NewGame() {
         super(DisplayType.NEW_GAME);
@@ -34,32 +35,34 @@ public class NewGame extends AbstractCLIDisplay {
     @Override
     public void display(Screen screen) {
         IOStream r = screen.getIOStream();
-        drawHeader(screen, header.split("\\n"));
+        drawHeader(screen, header.split(NEW_LINE));
         drawBody(screen,
-                "Hmmmm so you wanna give it a spin." +
-                        "Enter a name, not lesser than 3 characters." +
-                        "Or just hit enter to go back to Main Menu\n");
-        drawFooter(screen, APP_LOGO.split("\\n"));
-        r.writeLine("Enter Name :");
+                "Hmmmm so you wanna give it a spin.",
+                "Enter a name, not lesser than 3 characters.",
+                "Or just hit enter to go back to Main Menu");
+
+        drawFooter(screen, APP_LOGO.split(NEW_LINE));
 
         readInput(screen);
     }
 
     private void readInput(Screen screen) {
-        this.readInput(screen, (String name) -> {
-            name = name != null ? name.trim() : null;
+        screen.getIOStream().writeLine("Enter Name :");
+        this.readInput(screen, (String input) -> {
+            input = input != null ? input.trim() : null;
 
-            if (name == null || name.isEmpty()) {
+            if (input == null || input.isEmpty()) {
                 screen.getDisplayExplorer().previous(screen);
-            } else if (name.length() > 2) {
-                Player character = createNewCharacter(screen, name);
+            } else if (input.length() > 2) {
+                Player character = createNewCharacter(screen, input);
                 Player aliens[] = createNewAliens(screen, 3);
                 Game game = new CLIGame(character, aliens);
 
                 screen.setGame(game);
                 screen.getDisplayExplorer().next(screen, DisplayType.SELECT_SPACE_SHIP);
             } else {
-                screen.getIOStream().writeLine("Opps Enter Name :");
+                screen.getIOStream().writeLine("Opps! my grandma can come up with a better name");
+                throw new InputMismatchException();
             }
         });
     }
