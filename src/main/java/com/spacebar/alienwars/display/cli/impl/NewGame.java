@@ -7,15 +7,12 @@ import com.spacebar.alienwars.game.cli.CLIGame;
 import com.spacebar.alienwars.io.IOStream;
 import com.spacebar.alienwars.player.Player;
 import com.spacebar.alienwars.player.PlayerType;
-import com.spacebar.alienwars.player.cli.CLIPlayer;
 import com.spacebar.alienwars.screen.Screen;
-import com.spacebar.alienwars.spaceship.Spaceship;
 import com.spacebar.alienwars.spaceship.SpaceshipType;
 
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class NewGame extends AbstractCLIDisplay {

@@ -23,6 +23,9 @@ public abstract class AbstractCLIDisplay implements Display {
             "\n" +
             "(\")_(\")";
 
+    public static final String ERROR_FACE = "( •,•)";
+
+
     public static final String APP_BANNER = "" +
             "   _____   .__   .__                   __      __                       \n" +
             "  /  _  \\  |  |  |__|  ____    ____   /  \\    /  \\_____  _______  ______\n" +
@@ -55,7 +58,7 @@ public abstract class AbstractCLIDisplay implements Display {
             T input = (T) r.read();
             fnx.accept(input);
         } catch (InputMismatchException ime) {
-            screen.getIOStream().writeLine(ERROR_RABBIT);
+            screen.getIOStream().writeLine(ERROR_FACE);
             readInput(screen, fnx);
         }
     }
@@ -66,7 +69,7 @@ public abstract class AbstractCLIDisplay implements Display {
             int input = r.readInt();
             fnx.accept(input);
         } catch (InputMismatchException ime) {
-            screen.getIOStream().writeLine(ERROR_RABBIT);
+            screen.getIOStream().writeLine(ERROR_FACE);
             readIntInput(screen, fnx);
         }
     }
@@ -88,6 +91,9 @@ public abstract class AbstractCLIDisplay implements Display {
         String padding = contents((width - maxHeaderWidth) / 2, ' ');
 
         Arrays.stream(headers).forEach((header) -> {
+            if (header == null) {
+                header = WHITE_SPACE;
+            }
             screen.getIOStream().writeLine(padding + header);
         });
         screen.getIOStream().writeLine('+' + lines + '+');
@@ -99,6 +105,9 @@ public abstract class AbstractCLIDisplay implements Display {
         int width = Math.max(_width, maxBodyWidth);
         String padding = contents((width - maxBodyWidth) / 2, ' ');
         Arrays.stream(body).forEach((b) -> {
+            if (b == null) {
+                b = WHITE_SPACE;
+            }
             int rightPaddingLength = (width - (padding.length() + b.length())) - 2;
             String rightPadding = contents(rightPaddingLength, ' ');
             screen.getIOStream().writeLine("|" + padding + b + rightPadding + "|");
@@ -107,16 +116,84 @@ public abstract class AbstractCLIDisplay implements Display {
 
     protected void drawFooter(Screen screen, String... footers) {
         int width = screen.getWidth();
-        int maxHeaderWidth = computeMaxWidth(footers);
-        width = Math.max(width, maxHeaderWidth);
+        int maxFooterWidth = computeMaxWidth(footers);
+        width = Math.max(width, maxFooterWidth);
 
         String lines = contents(width - 2, '=');
-        String padding = contents((width - maxHeaderWidth) / 2, ' ');
+        String padding = contents((width - maxFooterWidth) / 2, ' ');
 
         screen.getIOStream().writeLine('+' + lines + '+');
         Arrays.stream(footers).forEach((footer) -> {
+            if (footer == null) {
+                footer = WHITE_SPACE;
+            }
             screen.getIOStream().writeLine(padding + footer);
         });
+    }
+
+    protected void drawTag(Screen screen, String... tags) {
+        int width = screen.getWidth();
+        //int maxTagWidth = computeMaxWidth(tags);
+        //width = Math.max(width / 2, maxTagWidth);
+        int _width = (width / 2) - 4;
+        String lines = contents(_width, "+-");
+       // screen.getIOStream().writeLine(lines + '+');
+
+
+        String padding = contents(4, WHITE_SPACE);
+
+
+        IntStream.range(0, tags.length).forEach(index -> {
+            String tag = tags[index];
+            if (tag == null) {
+                tag = WHITE_SPACE;
+            }
+
+            if (index < 2) {
+                screen.getIOStream().writeLine(lines + '+');
+            }
+            /*if(tag.length()>= _width){
+                index
+            }*/
+
+            String rightPadding = contents(_width - tag.length(), ' ');
+            if (index % 2 == 2) {
+                screen.getIOStream().write("|" + tag + rightPadding + '|' + padding);
+            } else {
+                screen.getIOStream().writeLine("|" + tag + rightPadding + '|');
+            }
+            screen.getIOStream().writeLine(lines + '+');
+        });
+
+    }
+
+    protected void drawTag(Screen screen, String content, boolean child) {
+        drawTag(screen, content, child, content.length());
+    }
+
+    protected void drawTag(Screen screen, String content, boolean child, int length) {
+        int width = length < content.length() + 2 ? content.length() + 2 : length;
+        String lines = contents(width / 2, "+-");
+        int x = width - content.length() - 1;
+        String padding = x > 0 ? contents(width, "+-") : "";
+
+        if (!child) {
+            screen.getIOStream().writeLine(lines + '+');
+            screen.getIOStream().writeLine(lines + '+');
+        }
+        screen.getIOStream().writeLine("|" + content + padding + '|');
+        screen.getIOStream().writeLine(lines + '+');
+    }
+
+    protected void appendTag(Screen screen, String content, int length) {
+        int width = ((length < content.length() ? content.length() + 2 : length) / 2) - 1;
+        String lines = contents(width, "+-");
+        int x = width - content.length() - 2;
+        String padding = x > 0 ? contents(width, "+-") : "";
+
+        screen.getIOStream().writeLine(lines + '+');
+        screen.getIOStream().writeLine("|" + content + padding + '|');
+        screen.getIOStream().writeLine(lines + '+');
     }
 
     protected String contents(int length, char pixel) {
@@ -137,7 +214,7 @@ public abstract class AbstractCLIDisplay implements Display {
 
     protected int computeMaxWidth(String... values) {
         return Arrays.stream(values)
-                .mapToInt((value) -> value.length())
+                .mapToInt(value -> value != null ? value.length() : 0)
                 .max().orElse(1);
     }
 }

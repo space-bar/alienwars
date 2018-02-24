@@ -1,6 +1,6 @@
 package com.spacebar.alienwars.weapon;
 
-public abstract class AbstractWeapon implements Weapon {
+public class DefaultWeapon implements Weapon {
 
     private final WeaponType weaponType;
 
@@ -8,11 +8,11 @@ public abstract class AbstractWeapon implements Weapon {
 
     private int avaliableRounds;
 
-    public AbstractWeapon(WeaponType weaponType) {
+    public DefaultWeapon(WeaponType weaponType) {
         this(weaponType, 0);
     }
 
-    public AbstractWeapon(WeaponType weaponType, int rounds) {
+    public DefaultWeapon(WeaponType weaponType, int rounds) {
         if (weaponType == null) {
             throw new IllegalArgumentException();
         }
@@ -25,6 +25,7 @@ public abstract class AbstractWeapon implements Weapon {
     public boolean fire() {
         if (canFire() && this.avaliableRounds > 0) {
             this.avaliableRounds--;
+            return true;
         }
         return false;
     }

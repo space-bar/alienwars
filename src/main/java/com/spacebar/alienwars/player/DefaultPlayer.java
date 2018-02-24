@@ -2,7 +2,7 @@ package com.spacebar.alienwars.player;
 
 import com.spacebar.alienwars.spaceship.Spaceship;
 
-public abstract class AbstractPlayer implements Player {
+public class DefaultPlayer implements Player {
 
     private final PlayerType playerType;
 
@@ -10,11 +10,13 @@ public abstract class AbstractPlayer implements Player {
 
     private Spaceship spaceship;
 
-    public AbstractPlayer(PlayerType playerType) {
+    private PlayerXP playerXP;
+
+    public DefaultPlayer(PlayerType playerType) {
         this(playerType, null);
     }
 
-    public AbstractPlayer(PlayerType playerType, String playerName) {
+    public DefaultPlayer(PlayerType playerType, String playerName) {
         if (playerType == null) {
             throw new IllegalArgumentException();
         }
@@ -36,7 +38,18 @@ public abstract class AbstractPlayer implements Player {
         this.spaceship = spaceship;
     }
 
+
     public PlayerType getPlayerType() {
         return playerType;
     }
+
+    @Override
+    public PlayerXP getPlayerXP() {
+        if (playerXP == null) {
+            playerXP = new DefaultPlayerXP();
+        }
+        return null;
+    }
+
+
 }

@@ -13,7 +13,8 @@ public abstract class AbstractSpaceship implements Spaceship {
 
     private String display;
 
-    private String spaceshipName;
+    private boolean destroy;
+
 
     private final SpaceshipType spaceshipType;
 
@@ -22,7 +23,6 @@ public abstract class AbstractSpaceship implements Spaceship {
             throw new IllegalArgumentException();
         }
         this.spaceshipType = spaceshipType;
-        this.spaceshipName = spaceshipType.name();
     }
 
 
@@ -37,6 +37,9 @@ public abstract class AbstractSpaceship implements Spaceship {
 
     @Override
     public Point getCoordinate() {
+        if (coordinate == null) {
+            coordinate = new Point();
+        }
         return coordinate;
     }
 
@@ -58,12 +61,11 @@ public abstract class AbstractSpaceship implements Spaceship {
         this.display = display;
     }
 
-    @Override
-    public String getSpaceshipName() {
-        return spaceshipName;
+    public boolean isDestroyed() {
+        return destroy;
     }
 
-    public void setSpaceshipName(String name) {
-        this.spaceshipName = name;
+    public void destroy() {
+        this.destroy = true;
     }
 }

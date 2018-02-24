@@ -10,11 +10,15 @@ public interface Spaceship {
 
     Weapon getWeapon();
 
+    void setWeapon(Weapon weapon);
+
     Point getCoordinate();
 
     SpaceshipType getSpaceshipType();
 
-    String getSpaceshipName();
-
     String getDisplay();
+
+    void destroy();
+
+    boolean isDestroyed();
 }

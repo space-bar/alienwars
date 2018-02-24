@@ -11,4 +11,6 @@ public interface Player {
     Spaceship getSpaceship();
 
     void setSpaceship(Spaceship spaceship);
+
+    PlayerXP getPlayerXP();
 }
