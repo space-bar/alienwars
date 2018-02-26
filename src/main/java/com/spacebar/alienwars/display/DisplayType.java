@@ -8,6 +8,7 @@ public enum DisplayType {
     SELECT_SPACE_SHIP,
     SAVE_GAME,
     PLAY_GAME,
+    GAME_STAT,
     HELP,
     ABOUT,
     EXIT

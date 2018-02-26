@@ -2,9 +2,12 @@ package com.spacebar.alienwars.display.cli.impl;
 
 import com.spacebar.alienwars.display.DisplayType;
 import com.spacebar.alienwars.display.cli.AbstractCLIDisplay;
+import com.spacebar.alienwars.exception.GameIllegalStateException;
 import com.spacebar.alienwars.game.Game;
+import com.spacebar.alienwars.game.GameStatus;
 import com.spacebar.alienwars.screen.Screen;
 import com.spacebar.alienwars.util.FileUtils;
+import com.spacebar.alienwars.util.GameUtils;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -23,7 +26,6 @@ public class LoadSavedGame extends AbstractCLIDisplay {
             "|_______ \\____(____  /\\____ |   \\______  (____  /__|_|  /\\___  >\n" +
             "        \\/         \\/      \\/          \\/     \\/      \\/     \\/";
 
-    private Properties manifiest;
     private List<String> gameList;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -33,14 +35,12 @@ public class LoadSavedGame extends AbstractCLIDisplay {
 
     @Override
     public void display(Screen screen) {
-        if (manifiest == null) {
-            readManifiest();
-        }
         String[] body = buildBody();
         drawHeader(screen, HEADER.split(NEW_LINE));
 
         drawBody(screen, WHITE_SPACE);
         if (body.length > 0) {
+            drawBody(screen, "Type in the number of the Game to Play");
             drawBody(screen, body);
         } else {
             drawBody(screen, "Opps! Seems like there are no saved files",
@@ -55,11 +55,12 @@ public class LoadSavedGame extends AbstractCLIDisplay {
 
     private String[] buildBody() {
         List<String> gameDisplayList = new ArrayList<>();
-        gameList = manifiest.stringPropertyNames().stream().filter(key -> {
-            Object filename = manifiest.get(key);
+        Properties manifest = GameUtils.getManifest();
+        gameList = manifest.stringPropertyNames().stream().filter(key -> {
+            String filename = manifest.getProperty(key);
             try {
                 if (filename != null) {
-                    String display = key + " [" + dateFormat.format(new Date(Long.parseLong(filename.toString()))) + "]";
+                    String display = key + " [" + dateFormat.format(new Date(Long.parseLong(filename))) + "]";
                     gameDisplayList.add(display);
                     return true;
                 }
@@ -68,7 +69,7 @@ public class LoadSavedGame extends AbstractCLIDisplay {
             }
             return false;
 
-        }).collect(Collectors.toList());
+        }).map(key -> manifest.getProperty(key)).collect(Collectors.toList());
 
         String[] body = new String[gameDisplayList.size()];
         IntStream.range(0, gameDisplayList.size()).forEach(index ->
@@ -84,7 +85,13 @@ public class LoadSavedGame extends AbstractCLIDisplay {
             if (index != null && gameList != null && index > 0 && index <= gameList.size()) {
                 Game game = loadGame(gameList.get(index - 1));
                 if (game != null) {
-                    screen.getDisplayExplorer().next(screen, DisplayType.PLAY_GAME);
+                    try {
+                        game.pause(GameStatus.PAUSE);
+                        screen.setGame(game);
+                        screen.getDisplayExplorer().next(screen, DisplayType.PLAY_GAME);
+                    } catch (GameIllegalStateException gis) {
+                        screen.getDisplayExplorer().display(screen, DisplayType.HOME);
+                    }
                 } else {
                     screen.getDisplayExplorer().display(screen, DisplayType.HOME);
                 }
@@ -93,15 +100,6 @@ public class LoadSavedGame extends AbstractCLIDisplay {
                 throw new InputMismatchException();
             }
         });
-    }
-
-
-    private void readManifiest() {
-        try {
-            manifiest = FileUtils.readManifest();
-        } catch (IOException e) {
-            manifiest = new Properties();
-        }
     }
 
     private Game loadGame(String filename) {

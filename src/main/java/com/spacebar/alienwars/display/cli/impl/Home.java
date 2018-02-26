@@ -42,7 +42,7 @@ public class Home extends AbstractCLIDisplay {
         screen.getIOStream().writeLine("Enter Menu Number :");
         this.readInput(screen, (String input) -> {
 
-            switch (input) {
+            switch (input.toLowerCase()) {
                 case "1":
                     screen.getDisplayExplorer().next(screen, DisplayType.NEW_GAME);
                     break;
@@ -55,11 +55,13 @@ public class Home extends AbstractCLIDisplay {
                 case "4":
                     screen.getDisplayExplorer().next(screen, DisplayType.ABOUT);
                     break;
+                case CMD_EXIT:
+                    screen.getDisplayExplorer().next(screen, DisplayType.EXIT);
+                    break;
                 default:
                     invalidInput(screen);
-
             }
-        });
+        }, true);
     }
 
     private void invalidInput(Screen screen) {

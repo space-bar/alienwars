@@ -4,6 +4,8 @@ import com.spacebar.alienwars.display.DisplayFactory;
 import com.spacebar.alienwars.display.DisplayType;
 import com.spacebar.alienwars.display.Display;
 import com.spacebar.alienwars.display.cli.impl.*;
+import com.spacebar.alienwars.game.Game;
+
 public class CLIDisplayFactory implements DisplayFactory {
 
     private Display homeDisplay;
@@ -15,6 +17,8 @@ public class CLIDisplayFactory implements DisplayFactory {
     private Display loadSavedGameDisplay;
 
     private Display saveGameDisplay;
+
+    private Display gameStatDisplay;
 
     private Display selectSpaceShipDisplay;
 
@@ -41,6 +45,8 @@ public class CLIDisplayFactory implements DisplayFactory {
 
                 case SAVE_GAME:
                     return getSaveGameDisplay();
+                case GAME_STAT:
+                    return getGameStatDisplay();
 
                 case PLAY_GAME:
                     return getPlayGameDisplay();
@@ -97,6 +103,13 @@ public class CLIDisplayFactory implements DisplayFactory {
             saveGameDisplay = new SaveGame();
         }
         return saveGameDisplay;
+    }
+
+    private Display getGameStatDisplay() {
+        if (gameStatDisplay == null) {
+            gameStatDisplay = new GameStat();
+        }
+        return gameStatDisplay;
     }
 
     private Display getSelectSpaceShipDisplay() {

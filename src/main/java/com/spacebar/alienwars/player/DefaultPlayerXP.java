@@ -68,11 +68,16 @@ public class DefaultPlayerXP implements PlayerXP {
     }
 
     private void initLevel(int level) {
+        int dl = (int) Math.max(Math.pow(level, level), 2);
+        int dx = this.xp > 3 ? (int) (this.xp % 3) : 2;
+        dx = dx < 2 ? 2 : dx;
+
         this.level = level;
-        this.maxXp = 5 ^ level * 10;
-        this.health = level ^ level - 2;
+        this.maxXp = dl * 10L * dx;
+        this.maxXp = xp + 10 > this.maxXp ? xp + this.maxXp : this.maxXp;
+        this.health = dl - 2;
         this.health = this.health < 1 ? 1 : this.health;
         this.availableHealth = this.health;
-        this.enemyCount = level ^ level + 1;
+        this.enemyCount = dl + 1;
     }
 }

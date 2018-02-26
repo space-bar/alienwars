@@ -15,6 +15,8 @@ public final class FileUtils {
         return System.getProperty("user.home") + File.separator + "alien-wars";
     }
 
+    private static Properties MANIFEST = new Properties();
+
     private FileUtils() {
     }
 

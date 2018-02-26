@@ -11,4 +11,6 @@ public interface DisplayExplorer {
     void display(Screen screen, DisplayType displayType);
 
     Display current();
+
+    boolean history(DisplayType displayType);
 }

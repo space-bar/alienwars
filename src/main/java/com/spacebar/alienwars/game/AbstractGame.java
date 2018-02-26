@@ -17,6 +17,7 @@ public abstract class AbstractGame implements Game {
     public AbstractGame(Player characterPlayer, Player[] alienPlayers) {
         this.characterPlayer = characterPlayer;
         this.alienPlayers = alienPlayers;
+        this.status = GameStatus.NEW;
     }
 
     @Override
@@ -34,6 +35,12 @@ public abstract class AbstractGame implements Game {
         playing = true;
         status = GameStatus.IN_PLAY;
     }
+    @Override
+    public void restart(Player... aliens) throws GameInitializationException {
+        this.alienPlayers = aliens;
+        playing = true;
+        status = GameStatus.IN_PLAY;
+    }
 
     @Override
     public boolean isPlaying() {
@@ -42,6 +49,12 @@ public abstract class AbstractGame implements Game {
 
     @Override
     public void stop(GameStatus status) throws GameIllegalStateException {
+        playing = false;
+        this.status = status;
+    }
+
+    @Override
+    public void pause(GameStatus status) throws GameIllegalStateException {
         playing = false;
         this.status = status;
     }

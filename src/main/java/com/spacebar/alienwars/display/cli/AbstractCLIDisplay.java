@@ -44,6 +44,8 @@ public abstract class AbstractCLIDisplay implements Display {
     public static final String CMD_BACK = "back";
 
     public static final String CMD_HOME = "home";
+    //
+
 
     private final DisplayType displayType;
 
@@ -79,18 +81,41 @@ public abstract class AbstractCLIDisplay implements Display {
 
     protected <T> void performDefaultCommand(Screen screen, T input, Consumer<T> fnx) {
         String value = trimValue(input != null ? input.toString() : null);
-        if (CMD_EXIT.equalsIgnoreCase(value)) {
-            screen.getDisplayExplorer().display(screen, DisplayType.EXIT);
-
+        if (value != null) {
+            switch (value.toLowerCase()) {
+                case CMD_HOME:
+                    Display display = screen.getDisplayExplorer().current();
+                    if (display == null || (!DisplayType.HOME.equals(display.getDisplayType()) && !DisplayType.HOME.equals(displayType)))
+                        screen.getDisplayExplorer().next(screen, DisplayType.HOME);
+                    else {
+                        throw new InputMismatchException();
+                    }
+                    break;
+                case CMD_BACK:
+                    screen.getDisplayExplorer().previous(screen);
+                    break;
+                case CMD_EXIT:
+                    screen.getDisplayExplorer().next(screen, DisplayType.EXIT);
+                    break;
+                default:
+                    if (fnx != null) {
+                        fnx.accept(input);
+                    }
+            }
+        }
+        /*if (CMD_EXIT.equalsIgnoreCase(value)) {
+            screen.getDisplayExplorer().next(screen, DisplayType.EXIT);
         } else if (CMD_BACK.equalsIgnoreCase(value)) {
             screen.getDisplayExplorer().previous(screen);
         } else if (CMD_HOME.equalsIgnoreCase(value)) {
             Display display = screen.getDisplayExplorer().current();
             if (display == null || (!DisplayType.HOME.equals(display.getDisplayType()) && !DisplayType.HOME.equals(displayType)))
-                screen.getDisplayExplorer().display(screen, DisplayType.HOME);
+                screen.getDisplayExplorer().next(screen, DisplayType.HOME);
+            else
+                throw new InputMismatchException();
         } else if (fnx != null) {
             fnx.accept(input);
-        }
+        }*/
     }
 
     protected Integer convertToInt(String value) {

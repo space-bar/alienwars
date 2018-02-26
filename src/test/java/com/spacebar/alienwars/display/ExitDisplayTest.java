@@ -8,8 +8,6 @@ public class ExitDisplayTest extends AbstractDisplayTest {
 
     @Test
     public void shouldRenderEXIT_thenTerminate() {
-        systemInMock.provideLines(CMD_EXIT);
-        exit.expectSystemExitWithStatus(0);
-        screen.getDisplayExplorer().next(screen, DisplayType.ABOUT);
+        renderDisplay_whenInputs_thenTerminate(DisplayType.EXIT);
     }
 }

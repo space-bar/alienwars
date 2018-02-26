@@ -16,9 +16,13 @@ public interface Game extends Serializable {
 
     void start() throws GameInitializationException;
 
+    void restart(Player... aliens) throws GameInitializationException;
+
     boolean isPlaying();
 
     void stop(GameStatus status) throws GameIllegalStateException;
+
+    void pause(GameStatus status) throws GameIllegalStateException;
 
     GameStatus getStatus();
 

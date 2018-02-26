@@ -5,12 +5,10 @@ import com.spacebar.alienwars.display.cli.AbstractCLIDisplay;
 import com.spacebar.alienwars.screen.Screen;
 import com.spacebar.alienwars.spaceship.Spaceship;
 import com.spacebar.alienwars.spaceship.SpaceshipType;
-import com.spacebar.alienwars.weapon.Weapon;
-import com.spacebar.alienwars.weapon.WeaponType;
+import com.spacebar.alienwars.util.GameUtils;
 
 import java.util.Arrays;
 import java.util.InputMismatchException;
-import java.util.Random;
 import java.util.stream.IntStream;
 
 public class SelectSpaceShip extends AbstractCLIDisplay {
@@ -42,7 +40,7 @@ public class SelectSpaceShip extends AbstractCLIDisplay {
     private String[] buildBody(String playerName, Spaceship[] ships) {
         String[] instructions = {"OK " + playerName,
                 "lets get you a spaceship",
-                "Select a spaceship for the list below",
+                "Select a spaceship from the list below",
                 "Enter a number and hit enter.", WHITE_SPACE,
                 "[EXIT to quit]", "[HOME to goto the Start Menu]", "[BACK to goto previous ]",
                 WHITE_SPACE
@@ -83,7 +81,8 @@ public class SelectSpaceShip extends AbstractCLIDisplay {
                 Integer value = convertToInt(input);
                 Spaceship[] spaceships = getCharacterSpaceShips(screen);
                 if (value != null && value > 0 && spaceships != null && value <= spaceships.length) {
-                    buildSpaceship(screen, spaceships[value - 1].getSpaceshipType());
+                    Spaceship spaceship = GameUtils.createSpaceship(screen, spaceships[value - 1].getSpaceshipType());
+                    screen.getGame().getCharacterPlayer().setSpaceship(spaceship);
                     screen.getDisplayExplorer().next(screen, DisplayType.PLAY_GAME);
                 } else {
                     screen.getIOStream().write("Come on! stop kidding around...");
@@ -91,17 +90,5 @@ public class SelectSpaceShip extends AbstractCLIDisplay {
                 }
             }
         });
-    }
-
-    private void buildSpaceship(Screen screen, SpaceshipType spaceshipType) {
-        Spaceship spaceship = screen.getSpaceshipFactory().createSpaceship(spaceshipType);
-        screen.getGame().getCharacterPlayer().setSpaceship(spaceship);
-
-        WeaponType[] weaponTypes = WeaponType.values();
-        Random random = new Random();
-        int x = random.nextInt(weaponTypes.length);
-        Weapon weapon = screen.getWeaponFactory().createWeapon(weaponTypes[x], 20);
-
-        spaceship.setWeapon(weapon);
     }
 }

@@ -1,6 +1,8 @@
 package com.spacebar.alienwars.display.cli.impl;
 
 import com.spacebar.alienwars.display.DisplayType;
+import com.spacebar.alienwars.exception.GameIllegalStateException;
+import com.spacebar.alienwars.exception.GameInitializationException;
 import com.spacebar.alienwars.game.XPLogic;
 import com.spacebar.alienwars.game.Game;
 import com.spacebar.alienwars.game.GameStatus;
@@ -10,16 +12,22 @@ import com.spacebar.alienwars.player.PlayerXP;
 import com.spacebar.alienwars.screen.Screen;
 import com.spacebar.alienwars.display.cli.AbstractCLIDisplay;
 import com.spacebar.alienwars.screen.cli.CLIScreen;
+import com.spacebar.alienwars.spaceship.Spaceship;
+import com.spacebar.alienwars.util.GameUtils;
 import com.spacebar.alienwars.weapon.Weapon;
 
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 public class PlayGame extends AbstractCLIDisplay {
+    public static final String CMD_STAT = "stat";
+
+    public static final String CMD_SAVE = "save";
 
     private Map<Integer, Player[]> coordinateMap;
 
@@ -31,15 +39,14 @@ public class PlayGame extends AbstractCLIDisplay {
     @Override
     public void display(Screen screen) {
         try {
+            coordinateMap = initCoordinateMap(screen);
             Game game = screen.getGame();
             if (!game.isPlaying()) {
                 game.start();
             }
-            coordinateMap = initCoordinateMap(screen);
             renderGame(screen);
         } catch (Exception e) {
             //
-            e.printStackTrace();
         }
     }
 
@@ -60,15 +67,48 @@ public class PlayGame extends AbstractCLIDisplay {
         StringBuilder battleField = drawBattleField(screen, steps, shot);
 
         GameStatus gameStatus = checkGameStatus(screen.getGame());
-        boolean levelUp = levelUp(screen, steps, shot);
-        if (gameStatus == GameStatus.IN_PLAY) {
-            if (levelUp) {
-                battleField = drawBattleField(screen, 0, 0);
-            }
-            drawHeader(screen, APP_BANNER.split(NEW_LINE));
-            screen.getIOStream().write(battleField.toString());
-            drawFooter(screen, APP_LOGO.split(NEW_LINE));
+        if (gameStatus == GameStatus.LOST || gameStatus == GameStatus.ABORTED) {
+            new EndGame().display(screen, gameStatus);
+            return;
+        }
 
+        boolean levelUp = levelUp(screen, steps, shot);
+        renderGame(screen, battleField, gameStatus, levelUp);
+
+        if (levelUp || gameStatus == GameStatus.WON) {
+            if (levelUp) {
+                try {
+                    Player[] aliens = GameUtils.createAliens(screen, screen.getGame().getCharacterPlayer().getPlayerXP().getEnemyCount());
+                    screen.getGame().restart(aliens);
+                } catch (GameInitializationException gie) {
+                    // restart game for the next level
+                    screen.getIOStream().write("Sorry Game could not be initialized!");
+                    return;
+                }
+            }
+            try {
+                TimeUnit.SECONDS.sleep(4);// pause for so user can notice next level loading
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            coordinateMap = initCoordinateMap(screen);
+            battleField = drawBattleField(screen, 0, 0);
+            renderGame(screen, battleField, screen.getGame().getStatus(), false);
+        }
+
+        readInput(screen);
+    }
+
+    private void renderGame(Screen screen, StringBuilder battleField, GameStatus gameStatus, boolean levelUp) {
+        drawHeader(screen, APP_BANNER.split(NEW_LINE));
+        screen.getIOStream().write(battleField.toString());
+        drawFooter(screen, APP_LOGO.split(NEW_LINE));
+
+        if (levelUp) {
+            drawBody(screen, "Nice !!! Level Completed.  Leveling Up...");
+        } else if (gameStatus != null && gameStatus == GameStatus.WON) {
+            drawBody(screen, "Wow !!! You won.  But not just yet...");
+        } else {
             Player characterPlayer = screen.getGame().getCharacterPlayer();
             PlayerXP playerXP = characterPlayer.getPlayerXP();
             Weapon weapon = characterPlayer.getSpaceship().getWeapon();
@@ -79,10 +119,6 @@ public class PlayGame extends AbstractCLIDisplay {
                     " Health : " + playerXP.getAvailableHealth() + " / " + playerXP.getHealth(),
                     " Points : " + playerXP.getXp() + " / " + playerXP.getMaxXp(),
                     " Weapon Rounds : " + weapon.getAvaliableRounds() + " / " + weapon.getRounds());
-
-            readInput(screen);
-        } else {
-            new EndGame().display(screen, gameStatus);
         }
     }
 
@@ -99,7 +135,6 @@ public class PlayGame extends AbstractCLIDisplay {
         }
         if (playerXP.canLevelUp()) {
             playerXP.levelUp();
-            coordinateMap = initCoordinateMap(screen);
             return true;
         }
         return false;
@@ -110,64 +145,63 @@ public class PlayGame extends AbstractCLIDisplay {
         Player[] alienPlayers = game.getAlienPlayers();
         Player characterPlayer = game.getCharacterPlayer();
 
-
         int width = screen.getWidth();
         int height = screen.getHeight();
         Map<Integer, Player[]> positionMap = new HashMap<>();
 
-
-        //compute a random positon for alien spaceship
-        int maxX = width / alienPlayers.length;
+        //compute a random positon for alien spaceship if NOT IN PLAY
+        int maxAlienPerRow = 4;
+        int maxX = Math.max(width, alienPlayers.length) / Math.max(alienPlayers.length, 1);
         int x = 0;
         Random random = new Random();
         for (int index = 0; index < alienPlayers.length; index++) {
             Player player = alienPlayers[index];
-            if (player.getSpaceship().isDestroyed()) {
-                //player = screen.getPlayerFactory().createPlayer(player.getPlayerType(), player.getPlayerName());
+            if (player.getSpaceship().isDestroyed() && game.isPlaying()) {
                 player.setSpaceship(screen.getSpaceshipFactory().createSpaceship(player.getSpaceship().getSpaceshipType()));
-                //alienPlayers[index] = player;
             }
 
             Point coordinate = player.getSpaceship().getCoordinate();
             String display = player.getSpaceship().getDisplay();
-            int m = maxX - display.length();
-            m = Math.max(m, 1);
-            //coordinate.x = coordinate.x>0?coordinate.x:random.nextInt(m * (index + 1) - x) + x;
+            int m = Math.max(maxX, display.length());
+
+            if (index >= maxAlienPerRow && (index % maxAlienPerRow) == 0) {
+                x = 0;
+                coordinate.y = coordinate.y > 0 ? coordinate.y : (index / maxAlienPerRow) + 1;
+            }
             if (coordinate.x == 0) {
-                coordinate.x = random.nextInt(m * (index + 1) - x) + x;
-                x = coordinate.x + x;
+                coordinate.x = random.nextInt(Math.max(m * (index + 1) - x - display.length(), 1)) + x;
+                x = coordinate.x + x + display.length();
             }
 
-            //coordinate.y = 0;
-            Player[] players = positionMap.get(coordinate.y);
-            Player[] playerz = null;
-            if (players == null || players.length == 0) {
-                players = new Player[]{player};
-            } else {
-                playerz = new Player[players.length + 1];
-                System.arraycopy(players, 0, playerz, 0, players.length);
-                playerz[players.length] = player;
-            }
-
-            positionMap.put(coordinate.y, playerz);
+            Player[] players = addPlayerToGroup(player, positionMap.get(coordinate.y));
+            positionMap.put(coordinate.y, players);
         }
 
+        // position character player at the footer
         Point coordinate = characterPlayer.getSpaceship().getCoordinate();
         coordinate.x = coordinate.x > 0 ? coordinate.x : (width - characterPlayer.getSpaceship().getDisplay().length()) / 2;
         coordinate.y = height;
-
-
-        Player[] playerAliens = new Player[alienPlayers.length];
-        System.arraycopy(alienPlayers, 0, playerAliens, 0, alienPlayers.length);
-        positionMap.put(0, playerAliens);
-        positionMap.put(height, new Player[]{characterPlayer});
+        positionMap.put(coordinate.y, new Player[]{characterPlayer});
 
         return positionMap;
     }
 
+    private Player[] addPlayerToGroup(Player player, Player[] players) {
+        Player[] playerz;
+        if (players == null || players.length == 0) {
+            playerz = new Player[]{player};
+        } else {
+            playerz = new Player[players.length + 1];
+            System.arraycopy(players, 0, playerz, 0, players.length);
+            playerz[players.length] = player;
+        }
+        return playerz;
+    }
+
     private GameStatus checkGameStatus(Game game) {
         if (game.isPlaying()) {
-            if (game.getCharacterPlayer().getSpaceship().isDestroyed()) {
+            Spaceship spaceship = game.getCharacterPlayer().getSpaceship();
+            if (spaceship.isDestroyed() || spaceship.getWeapon().getAvaliableRounds() <= 0) {
                 return GameStatus.LOST;
             }
             if (Arrays.stream(game.getAlienPlayers())
@@ -207,7 +241,6 @@ public class PlayGame extends AbstractCLIDisplay {
                         );
                     }
                     positionMap.put(index - stepY, players);
-                    //endGame if position is already taken
                 }
             }
             StringBuilder xData = drawXPosition(screen, shotX.get(), players);
@@ -258,8 +291,9 @@ public class PlayGame extends AbstractCLIDisplay {
             }
             if (playerList != null) {
                 xIndex.set(x);
-                String displayX = computeXPosition(playerList, xIndex, players);
+                String displayX = computeXPosition(playerList, x, players);
                 if (displayX != null) {
+                    xIndex.set(x + displayX.length());
                     display = displayX;
                 }
             }
@@ -269,10 +303,9 @@ public class PlayGame extends AbstractCLIDisplay {
         return sb;
     }
 
-    private String computeXPosition(List<Player> playerList, AtomicInteger xIndex, Player... players) {
+    private String computeXPosition(List<Player> playerList, int x, Player... players) {
         int indexAt = -1;
         String display = null;
-        int x = xIndex.get();
         for (int index = 0; index < playerList.size(); index++) {
             Player player = playerList.get(index);
             if (player != null) {
@@ -280,16 +313,10 @@ public class PlayGame extends AbstractCLIDisplay {
                 if (coordinate.x == x) {
                     display = player.getSpaceship().getDisplay();
                     if (player.getSpaceship().isDestroyed()) {
-                        OptionalInt optionalIndex =
-                                IntStream.range(0, players.length)
-                                        .filter(i -> player.equals(players[i]))
-                                        .findFirst();
-                        if (optionalIndex.isPresent()) {
-                            players[optionalIndex.getAsInt()] = null;
-                        }
+                        IntStream.range(0, players.length)
+                                .filter(i -> player.equals(players[i]))
+                                .findFirst().ifPresent(i -> players[i] = null);
                     }
-                    int displayWidth = display.length() - 1;
-                    x = x + displayWidth;
                     indexAt = index;
                     break;
                 }
@@ -298,7 +325,6 @@ public class PlayGame extends AbstractCLIDisplay {
         if (indexAt > -1 && indexAt < playerList.size()) { // remove to have one less to iterate over
             playerList.remove(indexAt);
         }
-        xIndex.set(x);
         return display;
     }
 
@@ -355,14 +381,24 @@ public class PlayGame extends AbstractCLIDisplay {
             } else if (cmd == 'l') {
                 steps = countRepetitiveLetter(input, 'l');
                 steps = Math.negateExact(steps);
-            } else if ("save".equalsIgnoreCase(input)) {
-                screen.getDisplayExplorer().next(screen, DisplayType.SAVE_GAME);
-            } else if ("exit".equalsIgnoreCase(input)) {
-                screen.getDisplayExplorer().previous(screen);
+            } else if (CMD_SAVE.equalsIgnoreCase(input)) {
+                pauseGameAndDisplay(screen, DisplayType.SAVE_GAME);
+                return;
+            } else if (CMD_STAT.equalsIgnoreCase(input)) {
+                pauseGameAndDisplay(screen, DisplayType.GAME_STAT);
                 return;
             }
         }
         renderGame(screen, steps, shot);
+    }
+
+    private void pauseGameAndDisplay(Screen screen, DisplayType displayType) {
+        try {
+            screen.getGame().pause(GameStatus.PAUSE);
+            screen.getDisplayExplorer().next(screen, displayType);
+        } catch (GameIllegalStateException e) {
+            throw new InputMismatchException();
+        }
     }
 
     private int countRepetitiveLetter(String input, char val) {
