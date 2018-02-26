@@ -1,7 +1,6 @@
 package com.spacebar.alienwars.display.cli.impl;
 
 import com.spacebar.alienwars.display.DisplayType;
-import com.spacebar.alienwars.io.IOStream;
 import com.spacebar.alienwars.screen.Screen;
 import com.spacebar.alienwars.display.cli.AbstractCLIDisplay;
 
@@ -10,7 +9,7 @@ import java.util.InputMismatchException;
 
 public class Home extends AbstractCLIDisplay {
 
-    public static final String header = "" +
+    public static final String HEADER = "" +
             " __      __       .__                               \n" +
             "/  \\    /  \\ ____ |  |   ____  ____   _____   ____  \n" +
             "\\   \\/\\/   // __ \\|  | _/ ___\\/  _ \\ /     \\_/ __ \\ \n" +
@@ -23,8 +22,7 @@ public class Home extends AbstractCLIDisplay {
     }
 
     public void display(Screen screen) {
-        IOStream r = screen.getIOStream();
-        drawHeader(screen, header.split("\\n"));
+        drawHeader(screen, HEADER.split("\\n"));
         drawBody(screen,
                 "What do you want to do ?",
                 "Type a number and hit enter.",
@@ -33,7 +31,8 @@ public class Home extends AbstractCLIDisplay {
                 "2. Load Saved Game",
                 "3. Help",
                 "4. About",
-                "5. Exit");
+                "",
+                "Just type EXIT to quit", WHITE_SPACE);
         drawFooter(screen, APP_LOGO.split("\\n"));
 
         readInput(screen);
@@ -41,28 +40,30 @@ public class Home extends AbstractCLIDisplay {
 
     private void readInput(Screen screen) {
         screen.getIOStream().writeLine("Enter Menu Number :");
-        this.readIntInput(screen, (input) -> {
+        this.readInput(screen, (String input) -> {
+
             switch (input) {
-                case 1:
+                case "1":
                     screen.getDisplayExplorer().next(screen, DisplayType.NEW_GAME);
                     break;
-                case 2:
+                case "2":
                     screen.getDisplayExplorer().next(screen, DisplayType.LOAD_SAVED_GAME);
                     break;
-                case 3:
+                case "3":
                     screen.getDisplayExplorer().next(screen, DisplayType.HELP);
                     break;
-                case 4:
+                case "4":
                     screen.getDisplayExplorer().next(screen, DisplayType.ABOUT);
                     break;
-                case 5:
-                    screen.getDisplayExplorer().next(screen, DisplayType.EXIT);
-                    break;
-                default: {
-                    screen.getIOStream().writeLine("I can do this all day");
-                    throw new InputMismatchException();
-                }
+                default:
+                    invalidInput(screen);
+
             }
         });
+    }
+
+    private void invalidInput(Screen screen) {
+        screen.getIOStream().writeLine("I can do this all day");
+        throw new InputMismatchException();
     }
 }

@@ -4,22 +4,25 @@ import com.spacebar.alienwars.display.DisplayFactory;
 import com.spacebar.alienwars.display.DisplayType;
 import com.spacebar.alienwars.display.Display;
 import com.spacebar.alienwars.display.cli.impl.*;
-
 public class CLIDisplayFactory implements DisplayFactory {
 
     private Display homeDisplay;
 
-    private Display startGameDisplay;
+    private Display playGameDisplay;
 
     private Display startNewGameDisplay;
 
     private Display loadSavedGameDisplay;
+
+    private Display saveGameDisplay;
 
     private Display selectSpaceShipDisplay;
 
     private Display helpDisplay;
 
     private Display aboutDisplay;
+
+    private Display exitDisplay;
 
 
     public Display getDisplay(DisplayType displayType) {
@@ -36,6 +39,9 @@ public class CLIDisplayFactory implements DisplayFactory {
                 case LOAD_SAVED_GAME:
                     return getLoadSavedGameDisplay();
 
+                case SAVE_GAME:
+                    return getSaveGameDisplay();
+
                 case PLAY_GAME:
                     return getPlayGameDisplay();
 
@@ -44,6 +50,9 @@ public class CLIDisplayFactory implements DisplayFactory {
 
                 case HELP:
                     return getHelpDisplay();
+
+                case EXIT:
+                    return getExitDisplay();
 
                 case ABOUT:
                     return getAboutDisplay();
@@ -63,10 +72,10 @@ public class CLIDisplayFactory implements DisplayFactory {
 
 
     private Display getPlayGameDisplay() {
-        if (startGameDisplay == null) {
-            startGameDisplay = new PlayGame();
+        if (playGameDisplay == null) {
+            playGameDisplay = new PlayGame();
         }
-        return startGameDisplay;
+        return playGameDisplay;
     }
 
     private Display getNewGameDisplay() {
@@ -81,6 +90,13 @@ public class CLIDisplayFactory implements DisplayFactory {
             loadSavedGameDisplay = new LoadSavedGame();
         }
         return loadSavedGameDisplay;
+    }
+
+    private Display getSaveGameDisplay() {
+        if (saveGameDisplay == null) {
+            saveGameDisplay = new SaveGame();
+        }
+        return saveGameDisplay;
     }
 
     private Display getSelectSpaceShipDisplay() {
@@ -103,6 +119,13 @@ public class CLIDisplayFactory implements DisplayFactory {
             aboutDisplay = new About();
         }
         return aboutDisplay;
+    }
+
+    private Display getExitDisplay() {
+        if (exitDisplay == null) {
+            exitDisplay = new Exit();
+        }
+        return exitDisplay;
     }
 
 

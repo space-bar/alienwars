@@ -6,6 +6,8 @@ public enum SpaceshipType {
 
     STARFLEET(false),
 
+    OPTIMUS(false),
+
     CYCLON(true),
 
     DESTROYER(true);

@@ -16,7 +16,7 @@ public abstract class AbstractCLIDisplay implements Display {
 
     public static final String WHITE_SPACE = " ";
 
-    public static final String ERROR_RABBIT = "" +
+    public static final String RABBIT = "" +
             "(\\_/)\n" +
             "\n" +
             "( •,•)\n" +
@@ -39,6 +39,12 @@ public abstract class AbstractCLIDisplay implements Display {
             " |A||l||i||e||n| |W||a||r||s|\n" +
             " +-++-++-++-++-+ +-++-++-++-+";
 
+    public static final String CMD_EXIT = "exit";
+
+    public static final String CMD_BACK = "back";
+
+    public static final String CMD_HOME = "home";
+
     private final DisplayType displayType;
 
     public AbstractCLIDisplay(DisplayType displayType) {
@@ -53,24 +59,37 @@ public abstract class AbstractCLIDisplay implements Display {
     }
 
     protected <T> void readInput(Screen screen, Consumer<T> fnx) {
+        readInput(screen, fnx, false);
+    }
+
+    protected <T> void readInput(Screen screen, Consumer<T> fnx, boolean skipDefaultCommand) {
         IOStream r = screen.getIOStream();
         try {
             T input = (T) r.read();
-            fnx.accept(input);
+            if (!skipDefaultCommand) {
+                performDefaultCommand(screen, input, fnx);
+            } else if (fnx != null) {
+                fnx.accept(input);
+            }
         } catch (InputMismatchException ime) {
             screen.getIOStream().writeLine(ERROR_FACE);
             readInput(screen, fnx);
         }
     }
 
-    protected void readIntInput(Screen screen, Consumer<Integer> fnx) {
-        IOStream r = screen.getIOStream();
-        try {
-            int input = r.readInt();
+    protected <T> void performDefaultCommand(Screen screen, T input, Consumer<T> fnx) {
+        String value = trimValue(input != null ? input.toString() : null);
+        if (CMD_EXIT.equalsIgnoreCase(value)) {
+            screen.getDisplayExplorer().display(screen, DisplayType.EXIT);
+
+        } else if (CMD_BACK.equalsIgnoreCase(value)) {
+            screen.getDisplayExplorer().previous(screen);
+        } else if (CMD_HOME.equalsIgnoreCase(value)) {
+            Display display = screen.getDisplayExplorer().current();
+            if (display == null || (!DisplayType.HOME.equals(display.getDisplayType()) && !DisplayType.HOME.equals(displayType)))
+                screen.getDisplayExplorer().display(screen, DisplayType.HOME);
+        } else if (fnx != null) {
             fnx.accept(input);
-        } catch (InputMismatchException ime) {
-            screen.getIOStream().writeLine(ERROR_FACE);
-            readIntInput(screen, fnx);
         }
     }
 
@@ -78,8 +97,12 @@ public abstract class AbstractCLIDisplay implements Display {
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException ime) {
+            return null;
         }
-        return null;
+    }
+
+    protected String trimValue(String value) {
+        return value == null ? "" : value.trim();
     }
 
     protected void drawHeader(Screen screen, String... headers) {
@@ -90,7 +113,7 @@ public abstract class AbstractCLIDisplay implements Display {
         String lines = contents(width - 2, '=');
         String padding = contents((width - maxHeaderWidth) / 2, ' ');
 
-        Arrays.stream(headers).forEach((header) -> {
+        Arrays.stream(headers).forEach(header -> {
             if (header == null) {
                 header = WHITE_SPACE;
             }
@@ -100,17 +123,23 @@ public abstract class AbstractCLIDisplay implements Display {
     }
 
     protected void drawBody(Screen screen, String... body) {
-        int _width = screen.getWidth();
+        drawBody(screen, true, body);
+    }
+
+    protected void drawBody(Screen screen, boolean bordered, String... body) {
+        int screenWidth = screen.getWidth();
         int maxBodyWidth = computeMaxWidth(body);
-        int width = Math.max(_width, maxBodyWidth);
+        int width = Math.max(screenWidth, maxBodyWidth);
         String padding = contents((width - maxBodyWidth) / 2, ' ');
-        Arrays.stream(body).forEach((b) -> {
+        String border = bordered ? "|" : WHITE_SPACE;
+        Arrays.stream(body).forEach(b -> {
             if (b == null) {
                 b = WHITE_SPACE;
             }
             int rightPaddingLength = (width - (padding.length() + b.length())) - 2;
             String rightPadding = contents(rightPaddingLength, ' ');
-            screen.getIOStream().writeLine("|" + padding + b + rightPadding + "|");
+
+            screen.getIOStream().writeLine(border + padding + b + rightPadding + border);
         });
     }
 
@@ -123,7 +152,7 @@ public abstract class AbstractCLIDisplay implements Display {
         String padding = contents((width - maxFooterWidth) / 2, ' ');
 
         screen.getIOStream().writeLine('+' + lines + '+');
-        Arrays.stream(footers).forEach((footer) -> {
+        Arrays.stream(footers).forEach(footer -> {
             if (footer == null) {
                 footer = WHITE_SPACE;
             }
@@ -131,84 +160,83 @@ public abstract class AbstractCLIDisplay implements Display {
         });
     }
 
-    protected void drawTag(Screen screen, String... tags) {
+
+    protected void drawTagGroup(Screen screen, int colSize, String... tags) {
         int width = screen.getWidth();
-        //int maxTagWidth = computeMaxWidth(tags);
-        //width = Math.max(width / 2, maxTagWidth);
-        int _width = (width / 2) - 4;
-        String lines = contents(_width, "+-");
-       // screen.getIOStream().writeLine(lines + '+');
-
-
+        int w = (width / (colSize * 2)) - colSize;
+        int computedWidth = w * 2;
+        String lines = contents(w, "+-");
         String padding = contents(4, WHITE_SPACE);
 
+        int size = (tags.length < colSize ? colSize : tags.length);
+        int cols = (size / colSize) + (size % colSize > 0 ? 1 : 0);
+        IOStream io = screen.getIOStream();
+        for (int col = 0; col < cols; col++) {
 
-        IntStream.range(0, tags.length).forEach(index -> {
-            String tag = tags[index];
-            if (tag == null) {
-                tag = WHITE_SPACE;
+            int f = (colSize * col);
+            int l = colSize * (col + 1);
+            if (col == 0) {
+                tagGroupHeader(f, l, io, padding, lines, tags);
             }
 
-            if (index < 2) {
-                screen.getIOStream().writeLine(lines + '+');
-            }
-            /*if(tag.length()>= _width){
-                index
-            }*/
+            tagGroupBody(f, l, io, padding, computedWidth, tags);
 
-            String rightPadding = contents(_width - tag.length(), ' ');
-            if (index % 2 == 2) {
-                screen.getIOStream().write("|" + tag + rightPadding + '|' + padding);
-            } else {
-                screen.getIOStream().writeLine("|" + tag + rightPadding + '|');
-            }
-            screen.getIOStream().writeLine(lines + '+');
-        });
+            tagGroupFooter(f, l, io, padding, lines, tags);
 
-    }
-
-    protected void drawTag(Screen screen, String content, boolean child) {
-        drawTag(screen, content, child, content.length());
-    }
-
-    protected void drawTag(Screen screen, String content, boolean child, int length) {
-        int width = length < content.length() + 2 ? content.length() + 2 : length;
-        String lines = contents(width / 2, "+-");
-        int x = width - content.length() - 1;
-        String padding = x > 0 ? contents(width, "+-") : "";
-
-        if (!child) {
-            screen.getIOStream().writeLine(lines + '+');
-            screen.getIOStream().writeLine(lines + '+');
         }
-        screen.getIOStream().writeLine("|" + content + padding + '|');
-        screen.getIOStream().writeLine(lines + '+');
     }
 
-    protected void appendTag(Screen screen, String content, int length) {
-        int width = ((length < content.length() ? content.length() + 2 : length) / 2) - 1;
-        String lines = contents(width, "+-");
-        int x = width - content.length() - 2;
-        String padding = x > 0 ? contents(width, "+-") : "";
+    private void tagGroupHeader(int f, int l, IOStream io, String padding, String lines, String[] tags) {
+        for (int x = f; x < l && x < tags.length; x++) {
+            boolean first = x == f || x == 0;
+            boolean last = x + 1 >= l || x + 1 >= tags.length;
+            io.write((first ? "" : padding) + lines + '+' + (last ? NEW_LINE : ""));
 
-        screen.getIOStream().writeLine(lines + '+');
-        screen.getIOStream().writeLine("|" + content + padding + '|');
-        screen.getIOStream().writeLine(lines + '+');
+        }
     }
+
+    private void tagGroupBody(int f, int l, IOStream io, String padding, int computedWidth, String[] tags) {
+        for (int x = f; x < l && x < tags.length; x++) {
+            boolean first = x == f || x == 0;
+            boolean last = x + 1 >= l || x + 1 >= tags.length;
+            String tag = tags[x] == null ? "" : tags[x];
+            if (tag.length() > computedWidth) {
+                tag = tag.substring(0, computedWidth - 4) + "...";
+            }
+
+            String rightPadding = contents(computedWidth - tag.length() - 1, ' ');
+            io.write((first ? "" : padding) + "|" + tag + rightPadding + '|' + (last ? NEW_LINE : ""));
+        }
+    }
+
+    private void tagGroupFooter(int f, int l, IOStream io, String padding, String lines, String[] tags) {
+        for (int x = f; x < l && x < tags.length; x++) {
+            boolean first = x == f || x == 0;
+            boolean last = x + 1 >= l || x + 1 >= tags.length;
+            io.write((first ? "" : padding) + lines + '+' + (last ? NEW_LINE : ""));
+        }
+    }
+
 
     protected String contents(int length, char pixel) {
+        if (length < 1) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
-        IntStream.range(0, length).forEach(i -> {
-            sb.append(pixel);
-        });
+        IntStream.range(0, length).forEach(i ->
+                sb.append(pixel)
+        );
         return sb.toString();
     }
 
     protected String contents(int length, String content) {
+        if (length < 1) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
-        IntStream.range(0, length).forEach(i -> {
-            sb.append(content);
-        });
+        IntStream.range(0, length).forEach(i ->
+                sb.append(content)
+        );
         return sb.toString();
     }
 

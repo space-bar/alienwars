@@ -3,6 +3,7 @@ package com.spacebar.alienwars.display;
 import com.spacebar.alienwars.io.IOStream;
 import com.spacebar.alienwars.screen.Screen;
 
+import java.util.Deque;
 import java.util.Optional;
 import java.util.Stack;
 
@@ -10,7 +11,7 @@ public class DefaultDisplayExplorer implements DisplayExplorer {
 
     private final Stack<DisplayType> explorerStack = new Stack<>();
     private Display current;
-
+    Deque g;
 
     @Override
     public void previous(Screen screen) {
@@ -32,13 +33,24 @@ public class DefaultDisplayExplorer implements DisplayExplorer {
         Optional<Display> displayableOptional = getDisplay(screen, displayType);
         if (displayableOptional.isPresent()) {
             Display display = displayableOptional.get();
-            if(current!=null) {
+            if (current != null) {
                 explorerStack.push(current.getDisplayType());
             }
             current = display;
             clearScreen(screen);
             display.display(screen);
 
+        }
+    }
+
+    @Override
+    public void display(Screen screen, DisplayType displayType) {
+        Optional<Display> displayableOptional = getDisplay(screen, displayType);
+        if (displayableOptional.isPresent()) {
+            Display display = displayableOptional.get();
+            current = display;
+            clearScreen(screen);
+            display.display(screen);
         }
     }
 

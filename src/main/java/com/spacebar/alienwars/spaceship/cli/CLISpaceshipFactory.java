@@ -11,36 +11,25 @@ public class CLISpaceshipFactory implements SpaceshipFactory {
     @Override
     public Spaceship createSpaceship(SpaceshipType spaceshipType) {
         if (spaceshipType != null) {
-            //String display = null;
             switch (spaceshipType) {
 
                 case ORION:
-                    return new CLISpaceship(SpaceshipType.ORION, "(-^-)");
+                    return new CLISpaceship(spaceshipType, "(-^-)","(~*~)");
 
                 case STARFLEET:
-                    return new CLISpaceship(SpaceshipType.STARFLEET, "[-/-^-\\-]");
+                    return new CLISpaceship(spaceshipType, "[-/-^-\\-]","[~/~*~)\\~]");
+
+                case OPTIMUS:
+                    return new CLISpaceship(spaceshipType, "(-|-^-|-)","(~|~*~|~)");
 
                 case CYCLON:
-                    return new CLISpaceship(SpaceshipType.CYCLON, "\\-o_o-/");
+                    return new CLISpaceship(spaceshipType, "\\-o_o-/","\\~*_*~/");
 
                 case DESTROYER:
-                    return new CLISpaceship(SpaceshipType.DESTROYER, "{-\\-o_o-/-}");
+                    return new CLISpaceship(spaceshipType, "{-\\-o_o-/-}","*~\\~*_*~/~*");
             }
-            /*return display != null
-                    ? new CLISpaceship(spaceshipType, dissplay)
-                    : new CLISpaceship(spaceshipType);*/
         }
         return null;
     }
 
-   /* private Spaceship createCyclon() {
-        new CLISpaceship(SpaceshipType.CYCLON);
-        return new AbstractSpaceship(SpaceshipType.CYCLON) {
-
-            @Override
-            public String getDescription() {
-                return super.getDescription();
-            }
-        };
-    }*/
 }

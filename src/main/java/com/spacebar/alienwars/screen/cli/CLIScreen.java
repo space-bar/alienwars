@@ -28,6 +28,10 @@ public class CLIScreen extends AbstractScreen {
         return ioStream;
     }
 
+    public void setIoStream(IOStream ioStream) {
+        this.ioStream = ioStream;
+    }
+
     @Override
     public DisplayFactory getDisplayFactory() {
         if (displayFactory == null) {

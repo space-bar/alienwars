@@ -2,7 +2,9 @@ package com.spacebar.alienwars.player;
 
 import com.spacebar.alienwars.spaceship.Spaceship;
 
-public interface Player {
+import java.io.Serializable;
+
+public interface Player extends Serializable {
 
     String getPlayerName();
 

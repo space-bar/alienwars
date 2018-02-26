@@ -1,22 +1,27 @@
 package com.spacebar.alienwars.player;
 
-public interface PlayerXP {
+import java.io.Serializable;
 
-    public long getXp();
+public interface PlayerXP extends Serializable {
 
-    public void addXp(long xp);
+    long getXp();
 
-    public void subtractXp(long xp);
+    void addXp(long xp);
 
-    public int getLevel();
+    int getLevel();
 
-    public void addLevel(int level);
+    int getHealth();
 
-    public void subtractLevel(int level);
+    int getAvailableHealth();
 
-    public int getHealth();
+    void subtractHealth(int health);
 
-    public void addHealth(int health);
+    long getMaxXp();
 
-    public void subtractHealth(int health);
+    void levelUp();
+
+    boolean canLevelUp();
+
+    int getEnemyCount();
+
 }

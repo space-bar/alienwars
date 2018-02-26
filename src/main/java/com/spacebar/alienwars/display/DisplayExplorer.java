@@ -8,5 +8,7 @@ public interface DisplayExplorer {
 
     void next(Screen screen, DisplayType displayType);
 
+    void display(Screen screen, DisplayType displayType);
+
     Display current();
 }

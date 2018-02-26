@@ -5,9 +5,15 @@ public class DefaultPlayerXP implements PlayerXP {
 
     private long xp;
 
+    private long maxXp;
+
     private int level;
 
     private int health;
+
+    private int availableHealth;
+
+    private int enemyCount;
 
 
     @Override
@@ -21,23 +27,8 @@ public class DefaultPlayerXP implements PlayerXP {
     }
 
     @Override
-    public void subtractXp(long xp) {
-        this.xp = Math.max(0, Math.subtractExact(this.xp, xp));
-    }
-
-    @Override
     public int getLevel() {
         return level;
-    }
-
-    @Override
-    public void addLevel(int level) {
-        this.level = Math.max(0, Math.addExact(this.level, level));
-    }
-
-    @Override
-    public void subtractLevel(int level) {
-        this.level = Math.max(0, Math.subtractExact(this.level, level));
     }
 
     @Override
@@ -45,13 +36,43 @@ public class DefaultPlayerXP implements PlayerXP {
         return health;
     }
 
-    @Override
-    public void addHealth(int health) {
-        this.health= Math.max(0, Math.addExact(this.health, health));
+    public int getAvailableHealth() {
+        return availableHealth;
     }
 
     @Override
     public void subtractHealth(int health) {
-        this.health = Math.max(0, Math.subtractExact(this.health, health));
+        this.availableHealth = Math.max(0, Math.subtractExact(this.availableHealth, health));
+    }
+
+    @Override
+    public long getMaxXp() {
+        return maxXp;
+    }
+
+    @Override
+    public boolean canLevelUp() {
+        return xp >= maxXp || level == 0;
+    }
+
+    @Override
+    public int getEnemyCount() {
+        return enemyCount;
+    }
+
+    @Override
+    public void levelUp() {
+        if (canLevelUp()) {
+            initLevel(level + 1);
+        }
+    }
+
+    private void initLevel(int level) {
+        this.level = level;
+        this.maxXp = 5 ^ level * 10;
+        this.health = level ^ level - 2;
+        this.health = this.health < 1 ? 1 : this.health;
+        this.availableHealth = this.health;
+        this.enemyCount = level ^ level + 1;
     }
 }

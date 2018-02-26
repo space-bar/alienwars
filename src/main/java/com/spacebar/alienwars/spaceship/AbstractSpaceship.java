@@ -19,12 +19,16 @@ public abstract class AbstractSpaceship implements Spaceship {
     private final SpaceshipType spaceshipType;
 
     public AbstractSpaceship(SpaceshipType spaceshipType) {
+        this(spaceshipType, null);
+    }
+
+    public AbstractSpaceship(SpaceshipType spaceshipType, String display) {
         if (spaceshipType == null) {
             throw new IllegalArgumentException();
         }
+        this.display = display;
         this.spaceshipType = spaceshipType;
     }
-
 
     @Override
     public Weapon getWeapon() {

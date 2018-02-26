@@ -44,4 +44,8 @@ public class DefaultWeapon implements Weapon {
     public int getAvaliableRounds() {
         return this.avaliableRounds;
     }
+
+    public WeaponType getWeaponType() {
+        return weaponType;
+    }
 }

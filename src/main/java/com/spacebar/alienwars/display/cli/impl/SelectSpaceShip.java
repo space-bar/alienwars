@@ -2,18 +2,11 @@ package com.spacebar.alienwars.display.cli.impl;
 
 import com.spacebar.alienwars.display.DisplayType;
 import com.spacebar.alienwars.display.cli.AbstractCLIDisplay;
-import com.spacebar.alienwars.game.Game;
-import com.spacebar.alienwars.game.cli.CLIGame;
-import com.spacebar.alienwars.io.IOStream;
-import com.spacebar.alienwars.player.Player;
-import com.spacebar.alienwars.player.PlayerType;
 import com.spacebar.alienwars.screen.Screen;
 import com.spacebar.alienwars.spaceship.Spaceship;
 import com.spacebar.alienwars.spaceship.SpaceshipType;
 import com.spacebar.alienwars.weapon.Weapon;
-import com.spacebar.alienwars.weapon.WeaponFactory;
 import com.spacebar.alienwars.weapon.WeaponType;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import java.util.Arrays;
 import java.util.InputMismatchException;
@@ -22,7 +15,7 @@ import java.util.stream.IntStream;
 
 public class SelectSpaceShip extends AbstractCLIDisplay {
 
-    public static final String header = "" +
+    public static final String HEADER = "" +
             " _________                           _________.__    .__        \n" +
             " /   _____/__________    ____  ____  /   _____/|  |__ |__|_____  \n" +
             " \\_____  \\\\____ \\__  \\ _/ ___\\/ __ \\ \\_____  \\ |  |  \\|  \\____ \\ \n" +
@@ -36,8 +29,8 @@ public class SelectSpaceShip extends AbstractCLIDisplay {
 
     @Override
     public void display(Screen screen) {
-        IOStream r = screen.getIOStream();
-        drawHeader(screen, header.split(NEW_LINE));
+
+        drawHeader(screen, HEADER.split(NEW_LINE));
 
         drawBody(screen, buildBody(screen.getGame().getCharacterPlayer().getPlayerName(), getCharacterSpaceShips(screen)));
 
@@ -50,8 +43,8 @@ public class SelectSpaceShip extends AbstractCLIDisplay {
         String[] instructions = {"OK " + playerName,
                 "lets get you a spaceship",
                 "Select a spaceship for the list below",
-                "Enter a number and hit enter.",
-                "Or just hit enter to go back to Main Menu",
+                "Enter a number and hit enter.", WHITE_SPACE,
+                "[EXIT to quit]", "[HOME to goto the Start Menu]", "[BACK to goto previous ]",
                 WHITE_SPACE
         };
         String[] shipContents = new String[ships.length];

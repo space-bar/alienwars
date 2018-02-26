@@ -4,10 +4,15 @@ import com.spacebar.alienwars.exception.GameIllegalStateException;
 import com.spacebar.alienwars.exception.GameInitializationException;
 import com.spacebar.alienwars.player.Player;
 
-public class AbstractGame implements Game {
+public abstract class AbstractGame implements Game {
 
-    private  Player characterPlayer;
-    private  Player[] alienPlayers;
+    private Player characterPlayer;
+    private Player[] alienPlayers;
+    private boolean playing;
+    private GameStatus status;
+
+    private String name;
+    private XPLogic xp;
 
     public AbstractGame(Player characterPlayer, Player[] alienPlayers) {
         this.characterPlayer = characterPlayer;
@@ -24,33 +29,40 @@ public class AbstractGame implements Game {
         return alienPlayers;
     }
 
-    public void setCharacterPlayer(Player characterPlayer) {
-        this.characterPlayer = characterPlayer;
-    }
-
-    public void setAlienPlayers(Player[] alienPlayers) {
-        this.alienPlayers = alienPlayers;
+    @Override
+    public void start() throws GameInitializationException {
+        playing = true;
+        status = GameStatus.IN_PLAY;
     }
 
     @Override
-    public void start() throws GameIllegalStateException, GameInitializationException {
-
+    public boolean isPlaying() {
+        return playing;
     }
 
     @Override
-    public void stop() throws GameIllegalStateException {
-
+    public void stop(GameStatus status) throws GameIllegalStateException {
+        playing = false;
+        this.status = status;
     }
 
     @Override
-    public void pause() throws GameIllegalStateException {
-
+    public GameStatus getStatus() {
+        return status;
     }
 
     @Override
-    public void resume() throws GameIllegalStateException {
-
+    public String getName() {
+        return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public XPLogic getXPLogic() {
+        if (xp == null)
+            xp = new DefaultXPLogic();
+        return xp;
+    }
 }

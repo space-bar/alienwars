@@ -1,6 +1,8 @@
 package com.spacebar.alienwars.weapon;
 
-public interface Weapon {
+import java.io.Serializable;
+
+public interface Weapon extends Serializable {
 
     boolean fire();
 
@@ -9,5 +11,7 @@ public interface Weapon {
     int getRounds();
 
     int getAvaliableRounds();
+
+    WeaponType getWeaponType();
 
 }

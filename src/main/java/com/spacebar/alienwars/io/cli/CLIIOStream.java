@@ -11,21 +11,21 @@ import java.util.stream.IntStream;
 
 public class CLIIOStream implements IOStream<String> {
 
-    private final static Console console = System.console();
+    private Console console = System.console();
 
-    private final static PrintStream out = System.out;
+    private PrintStream out = System.out;
 
-    private final Scanner in = console == null ? new Scanner(System.in) : null;
+    private Scanner in = console == null ? new Scanner(System.in) : null;
 
     private boolean windows;
 
-    {
+
+    public CLIIOStream() {
         String os = System.getProperty("os.name");
         windows = os != null && os.contains("Windows");
     }
 
     @Override
-
     public void write(String value) {
         if (console != null) {
             console.writer().print(value);

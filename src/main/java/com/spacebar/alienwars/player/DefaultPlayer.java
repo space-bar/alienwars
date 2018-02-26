@@ -48,7 +48,7 @@ public class DefaultPlayer implements Player {
         if (playerXP == null) {
             playerXP = new DefaultPlayerXP();
         }
-        return null;
+        return playerXP;
     }
 
 

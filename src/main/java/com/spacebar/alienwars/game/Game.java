@@ -4,19 +4,24 @@ import com.spacebar.alienwars.exception.GameIllegalStateException;
 import com.spacebar.alienwars.exception.GameInitializationException;
 import com.spacebar.alienwars.player.Player;
 
-public interface Game {
+import java.io.Serializable;
+
+public interface Game extends Serializable {
+
+    String getName();
 
     Player getCharacterPlayer();
 
     Player[] getAlienPlayers();
 
-    void start() throws GameIllegalStateException, GameInitializationException;
+    void start() throws GameInitializationException;
 
-    void stop() throws GameIllegalStateException;
+    boolean isPlaying();
 
-    void pause() throws GameIllegalStateException;
+    void stop(GameStatus status) throws GameIllegalStateException;
 
-    void resume() throws GameIllegalStateException;
+    GameStatus getStatus();
 
+    XPLogic getXPLogic();
 
 }
