@@ -113,6 +113,7 @@ public class PlayGame extends AbstractCLIDisplay {
 
         int width = screen.getWidth();
         int height = screen.getHeight();
+        Map<Integer, Player[]> positionMap = new HashMap<>();
 
 
         //compute a random positon for alien spaceship
@@ -131,16 +132,31 @@ public class PlayGame extends AbstractCLIDisplay {
             String display = player.getSpaceship().getDisplay();
             int m = maxX - display.length();
             m = Math.max(m, 1);
-            coordinate.x = random.nextInt(m * (index + 1) - x) + x;
-            coordinate.y = 0;
-            x = coordinate.x + x;
+            //coordinate.x = coordinate.x>0?coordinate.x:random.nextInt(m * (index + 1) - x) + x;
+            if (coordinate.x == 0) {
+                coordinate.x = random.nextInt(m * (index + 1) - x) + x;
+                x = coordinate.x + x;
+            }
+
+            //coordinate.y = 0;
+            Player[] players = positionMap.get(coordinate.y);
+            Player[] playerz = null;
+            if (players == null || players.length == 0) {
+                players = new Player[]{player};
+            } else {
+                playerz = new Player[players.length + 1];
+                System.arraycopy(players, 0, playerz, 0, players.length);
+                playerz[players.length] = player;
+            }
+
+            positionMap.put(coordinate.y, playerz);
         }
 
         Point coordinate = characterPlayer.getSpaceship().getCoordinate();
-        coordinate.x = (width - characterPlayer.getSpaceship().getDisplay().length()) / 2;
+        coordinate.x = coordinate.x > 0 ? coordinate.x : (width - characterPlayer.getSpaceship().getDisplay().length()) / 2;
         coordinate.y = height;
 
-        Map<Integer, Player[]> positionMap = new HashMap<>();
+
         Player[] playerAliens = new Player[alienPlayers.length];
         System.arraycopy(alienPlayers, 0, playerAliens, 0, alienPlayers.length);
         positionMap.put(0, playerAliens);
