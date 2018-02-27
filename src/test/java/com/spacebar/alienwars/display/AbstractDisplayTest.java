@@ -9,7 +9,6 @@ import org.junit.Assert;
 
 import java.util.*;
 
-import static com.spacebar.alienwars.display.cli.AbstractCLIDisplay.CMD_EXIT;
 
 
 public abstract class AbstractDisplayTest extends AbstractCLITest {

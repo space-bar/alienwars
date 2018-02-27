@@ -10,6 +10,10 @@ import java.util.InputMismatchException;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
+import static com.spacebar.alienwars.util.GameUtils.CMD_BACK;
+import static com.spacebar.alienwars.util.GameUtils.CMD_EXIT;
+import static com.spacebar.alienwars.util.GameUtils.CMD_HOME;
+
 public abstract class AbstractCLIDisplay implements Display {
 
     public static final String NEW_LINE = "\n";
@@ -39,11 +43,7 @@ public abstract class AbstractCLIDisplay implements Display {
             " |A||l||i||e||n| |W||a||r||s|\n" +
             " +-++-++-++-++-+ +-++-++-++-+";
 
-    public static final String CMD_EXIT = "exit";
 
-    public static final String CMD_BACK = "back";
-
-    public static final String CMD_HOME = "home";
     //
 
 

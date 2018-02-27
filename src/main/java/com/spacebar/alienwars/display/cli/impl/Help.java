@@ -26,12 +26,21 @@ public class Help extends AbstractCLIDisplay {
 
         drawBody(screen, false, RABBIT.split(NEW_LINE));
 
-        drawBody(screen, false, "There is an Alien invasion on your planet");
+        drawBody(screen, false, "There is an Alien invasion on your planet",
+                "Below are the control commands to fight back.",
+                "Note that commands are case-insensitive");
         drawTagGroup(screen, 1,
-WHITE_SPACE,
+                WHITE_SPACE,
                 " HOME       | Goto the home main Menu",
                 " BACK       | Goto the prevoius display",
-                " EXIT       | terminate the Game application");
+                " STAT       | Display Game statistics",
+                " SAVE       | Save Game while IN PLAY",
+                " EXIT       | terminate the Game application",
+                WHITE_SPACE,
+                "L or A      | move left",
+                "R or D      | move right",
+                "1 or ENTER  | fire"
+        );
         drawFooter(screen, APP_LOGO.split(NEW_LINE));
 
         readInput(screen);

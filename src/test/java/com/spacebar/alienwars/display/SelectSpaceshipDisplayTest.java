@@ -7,9 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-import static com.spacebar.alienwars.display.cli.AbstractCLIDisplay.CMD_BACK;
-import static com.spacebar.alienwars.display.cli.AbstractCLIDisplay.CMD_EXIT;
-import static com.spacebar.alienwars.display.cli.AbstractCLIDisplay.CMD_HOME;
+import static com.spacebar.alienwars.util.GameUtils.CMD_BACK;
+import static com.spacebar.alienwars.util.GameUtils.CMD_EXIT;
+import static com.spacebar.alienwars.util.GameUtils.CMD_HOME;
 
 public class SelectSpaceshipDisplayTest extends AbstractDisplayTest {
 

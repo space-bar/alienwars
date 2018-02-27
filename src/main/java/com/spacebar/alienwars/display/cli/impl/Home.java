@@ -7,6 +7,8 @@ import com.spacebar.alienwars.display.cli.AbstractCLIDisplay;
 
 import java.util.InputMismatchException;
 
+import static com.spacebar.alienwars.util.GameUtils.CMD_EXIT;
+
 public class Home extends AbstractCLIDisplay {
 
     public static final String HEADER = "" +

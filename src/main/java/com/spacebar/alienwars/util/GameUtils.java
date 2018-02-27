@@ -23,31 +23,41 @@ public final class GameUtils {
             .filter(spaceshipType -> spaceshipType.isAlien())
             .toArray(size -> new SpaceshipType[size]);
 
+    public static final String CMD_EXIT = "exit";
+
+    public static final String CMD_BACK = "back";
+
+    public static final String CMD_HOME = "home";
+
+    private static Properties manifest;
+
     private GameUtils() {
     }
 
-    private static Properties MANIFEST;
 
     public static Properties getManifest() {
-        if (MANIFEST == null) {
+        if (manifest == null) {
             try {
-                MANIFEST = FileUtils.readManifest();
+                manifest = FileUtils.readManifest();
             } catch (IOException ex) {
                 // if reading manifest fails lets still play the game
-                MANIFEST = new Properties();
+                manifest = new Properties();
             }
         }
-        return MANIFEST;
+        return manifest;
     }
 
     public static Spaceship createSpaceship(Screen screen, SpaceshipType spaceshipType) {
         Spaceship spaceship = screen.getSpaceshipFactory().createSpaceship(spaceshipType);
-
-        WeaponType[] weaponTypes = WeaponType.values();
-        int x = new Random().nextInt(weaponTypes.length);
-        Weapon weapon = screen.getWeaponFactory().createWeapon(weaponTypes[x], 20);
+        Weapon weapon = createWeapon(screen);
         spaceship.setWeapon(weapon);
         return spaceship;
+    }
+
+    public static Weapon createWeapon(Screen screen) {
+        WeaponType[] weaponTypes = WeaponType.values();
+        int x = new Random().nextInt(weaponTypes.length);
+        return screen.getWeaponFactory().createWeapon(weaponTypes[x], weaponTypes[x].getReloadRounds());
     }
 
     public static Game createGame(Screen screen, String characterName) {

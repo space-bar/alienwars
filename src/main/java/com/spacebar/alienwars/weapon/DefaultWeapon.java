@@ -4,7 +4,7 @@ public class DefaultWeapon implements Weapon {
 
     private final WeaponType weaponType;
 
-    private final int rounds;
+    private int rounds;
 
     private int avaliableRounds;
 
@@ -43,6 +43,14 @@ public class DefaultWeapon implements Weapon {
     @Override
     public int getAvaliableRounds() {
         return this.avaliableRounds;
+    }
+
+    @Override
+    public void reload() {
+        if (weaponType != null) {
+            rounds = rounds + weaponType.getReloadRounds();
+            this.avaliableRounds = this.avaliableRounds + weaponType.getReloadRounds();
+        }
     }
 
     public WeaponType getWeaponType() {

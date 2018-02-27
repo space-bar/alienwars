@@ -6,9 +6,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import java.util.Arrays;
+import static com.spacebar.alienwars.util.GameUtils.CMD_EXIT;
 
-import static com.spacebar.alienwars.display.cli.AbstractCLIDisplay.CMD_EXIT;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({

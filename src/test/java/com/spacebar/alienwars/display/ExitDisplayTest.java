@@ -2,8 +2,6 @@ package com.spacebar.alienwars.display;
 
 import org.junit.Test;
 
-import static com.spacebar.alienwars.display.cli.AbstractCLIDisplay.CMD_EXIT;
-
 public class ExitDisplayTest extends AbstractDisplayTest {
 
     @Test

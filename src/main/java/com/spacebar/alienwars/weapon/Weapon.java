@@ -12,6 +12,8 @@ public interface Weapon extends Serializable {
 
     int getAvaliableRounds();
 
+    void reload();
+
     WeaponType getWeaponType();
 
 }

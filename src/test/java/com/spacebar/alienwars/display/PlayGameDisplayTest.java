@@ -1,13 +1,13 @@
 package com.spacebar.alienwars.display;
 
-import com.spacebar.alienwars.util.GameUtils;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 
-import static com.spacebar.alienwars.display.cli.AbstractCLIDisplay.CMD_EXIT;
-import static com.spacebar.alienwars.display.cli.AbstractCLIDisplay.CMD_HOME;
+import static com.spacebar.alienwars.util.GameUtils.CMD_EXIT;
+import static com.spacebar.alienwars.util.GameUtils.CMD_HOME;
+import static com.spacebar.alienwars.util.PlayGameUtils.CMD_SAVE;
+import static com.spacebar.alienwars.util.PlayGameUtils.CMD_STAT;
 
 public class PlayGameDisplayTest extends AbstractDisplayTest {
 
@@ -41,4 +41,52 @@ public class PlayGameDisplayTest extends AbstractDisplayTest {
                 input, CMD_EXIT);
     }
 
+    @Test
+    public void shouldRenderPLAYGAME_whenSaveAsInput_thenSAVEGAME_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.PLAY_GAME, DisplayType.SAVE_GAME},
+                CMD_SAVE, CMD_EXIT);
+    }
+
+    @Test
+    public void shouldRenderPLAYGAME_whenStatInput_thenGAMESTATE_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.PLAY_GAME, DisplayType.GAME_STAT},
+                CMD_STAT, CMD_EXIT);
+    }
+
+    @Test
+    public void shouldRenderPLAYGAME_when1AsInput_thenShoot_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.PLAY_GAME},
+                "1", CMD_EXIT);
+    }
+
+    @Test
+    public void shouldRenderPLAYGAME_whenRInput_thenMoveRight_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.PLAY_GAME},
+                "R", CMD_EXIT);
+    }
+
+    @Test
+    public void shouldRenderPLAYGAME_whenDInput_thenMoveRight_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.PLAY_GAME},
+                "D", CMD_EXIT);
+    }
+
+    @Test
+    public void shouldRenderPLAYGAME_whenLInput_thenMoveLeft_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.PLAY_GAME},
+                "L", CMD_EXIT);
+    }
+
+    @Test
+    public void shouldRenderPLAYGAME_whenAInput_thenMoveLeft_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.PLAY_GAME},
+                "A", CMD_EXIT);
+    }
 }

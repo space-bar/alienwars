@@ -7,6 +7,8 @@ import com.spacebar.alienwars.game.GameStatus;
 import com.spacebar.alienwars.player.Player;
 import com.spacebar.alienwars.screen.Screen;
 
+import static com.spacebar.alienwars.util.GameUtils.CMD_BACK;
+
 public class EndGame extends AbstractCLIDisplay {
 
     public static final String YOU_WON = "" +
@@ -77,7 +79,6 @@ public class EndGame extends AbstractCLIDisplay {
                 performDefaultCommand(screen, input, v -> {
                 });
             }
-
         }, true);
     }
 }
