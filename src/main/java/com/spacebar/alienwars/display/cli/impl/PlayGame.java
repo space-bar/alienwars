@@ -35,7 +35,7 @@ public class PlayGame extends AbstractCLIDisplay {
     @Override
     public void display(Screen screen) {
         try {
-            coordinateMap = initCoordinateMap(screen);
+            coordinateMap = PlayGameUtils.buildCoordinateMap(screen);
             Game game = screen.getGame();
             if (!game.isPlaying()) {
                 game.start();
@@ -44,14 +44,6 @@ public class PlayGame extends AbstractCLIDisplay {
         } catch (Exception e) {
             //
         }
-    }
-
-    public static void main(String[] args) {
-        new PlayGame().drawTagGroup(new CLIScreen(100, 30), 2, " Player : xxxxasa",
-                " Level : 10 ",
-                " Weapon Rounds : 10 ",
-                " Points : 10 ",
-                " Weapon Rounds : 10 ");
     }
 
     private void renderGame(Screen screen) {
@@ -87,7 +79,7 @@ public class PlayGame extends AbstractCLIDisplay {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            coordinateMap = initCoordinateMap(screen);
+            coordinateMap = PlayGameUtils.buildCoordinateMap(screen);
             battleField = drawBattleField(screen, 0, 0);
             renderGame(screen, battleField, screen.getGame().getStatus(), false);
         }
@@ -119,52 +111,7 @@ public class PlayGame extends AbstractCLIDisplay {
     }
 
 
-    private Map<Integer, Player[]> initCoordinateMap(Screen screen) {
-        Game game = screen.getGame();
-        Player[] alienPlayers = game.getAlienPlayers();
-        Player characterPlayer = game.getCharacterPlayer();
 
-        int width = screen.getWidth() - 2;
-        int height = screen.getHeight();
-        Map<Integer, Player[]> positionMap = new HashMap<>();
-
-        //compute a random positon for alien spaceship if NOT IN PLAY
-        int maxAlienPerRow = 4;
-        int maxX = Math.max(width, alienPlayers.length) / Math.max(alienPlayers.length, 1);
-        int x = 0;
-        Random random = new Random();
-        for (int index = 0; index < alienPlayers.length; index++) {
-            Player player = alienPlayers[index];
-            if (player.getSpaceship().isDestroyed() && game.isPlaying()) {
-                player.setSpaceship(screen.getSpaceshipFactory().createSpaceship(player.getSpaceship().getSpaceshipType()));
-            }
-
-            Point coordinate = player.getSpaceship().getCoordinate();
-            String display = player.getSpaceship().getDisplay();
-            int m = Math.max(maxX, display.length());
-
-            if (index >= maxAlienPerRow && (index % maxAlienPerRow) == 0) {
-                x = 0;
-                coordinate.y = coordinate.y > 0 ? coordinate.y : (index / maxAlienPerRow) + 1;
-            }
-            if (coordinate.x == 0) {
-                coordinate.x = random.nextInt(Math.max((m * index) - x - display.length(), 1)) + x;
-                coordinate.x = Math.min(coordinate.x, width - display.length());
-                x = coordinate.x + x + display.length();
-            }
-
-            Player[] players = PlayGameUtils.addPlayerToGroup(player, positionMap.get(coordinate.y));
-            positionMap.put(coordinate.y, players);
-        }
-
-        // position character player at the footer
-        Point coordinate = characterPlayer.getSpaceship().getCoordinate();
-        coordinate.x = coordinate.x > 0 ? coordinate.x : (width - characterPlayer.getSpaceship().getDisplay().length()) / 2;
-        coordinate.y = height;
-        positionMap.put(coordinate.y, new Player[]{characterPlayer});
-
-        return positionMap;
-    }
 
 
     private StringBuilder drawBattleField(Screen screen, int step, int shot) {

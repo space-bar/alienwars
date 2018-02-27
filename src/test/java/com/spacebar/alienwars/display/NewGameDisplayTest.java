@@ -46,4 +46,16 @@ public class NewGameDisplayTest extends AbstractDisplayTest {
 
     }
 
+    @Test
+    public void shouldRenderNEWGAME_whenInvalidInput_whenExitAsInput_thenTerminate() {
+        String playerName = "T";
+        exit.checkAssertionAfterwards(() ->
+                Assert.assertNull(screen.getGame())
+        );
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.NEW_GAME},
+                playerName, CMD_EXIT);
+
+    }
+
 }

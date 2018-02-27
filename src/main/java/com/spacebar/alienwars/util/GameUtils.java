@@ -88,4 +88,11 @@ public final class GameUtils {
     }
 
 
+    public static void saveGame(String name, Game game) throws IOException {
+        String fileName = String.valueOf(System.currentTimeMillis());
+        FileUtils.writeAsObject(fileName, game);
+        FileUtils.writeManifest(GameUtils.getManifest());
+        GameUtils.getManifest().put(name, fileName);
+
+    }
 }

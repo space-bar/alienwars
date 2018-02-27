@@ -1,5 +1,6 @@
 package com.spacebar.alienwars.display;
 
+import com.spacebar.alienwars.game.cli.CLIGame;
 import com.spacebar.alienwars.player.Player;
 import com.spacebar.alienwars.spaceship.SpaceshipType;
 import org.junit.Assert;
@@ -72,6 +73,5 @@ public class SelectSpaceshipDisplayTest extends AbstractDisplayTest {
         renderDisplay_whenInputs_thenAssert(
                 new DisplayType[]{DisplayType.SELECT_SPACE_SHIP},
                 "X", CMD_EXIT);
-
     }
 }

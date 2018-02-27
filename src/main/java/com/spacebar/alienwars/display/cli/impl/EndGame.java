@@ -7,7 +7,10 @@ import com.spacebar.alienwars.game.GameStatus;
 import com.spacebar.alienwars.player.Player;
 import com.spacebar.alienwars.screen.Screen;
 
+import java.util.InputMismatchException;
+
 import static com.spacebar.alienwars.util.GameUtils.CMD_BACK;
+import static com.spacebar.alienwars.util.PlayGameUtils.CMD_SAVE;
 
 public class EndGame extends AbstractCLIDisplay {
 
@@ -33,7 +36,7 @@ public class EndGame extends AbstractCLIDisplay {
 
     @Override
     public void display(Screen screen) {
-    //
+        //
     }
 
 
@@ -70,14 +73,18 @@ public class EndGame extends AbstractCLIDisplay {
     private void readInput(Screen screen) {
         screen.getIOStream().write(NEW_LINE + "Enter:");
         this.readInput(screen, (String input) -> {
-
-            if (CMD_BACK.equalsIgnoreCase(input)) {
-                screen.getDisplayExplorer().display(screen, DisplayType.PLAY_GAME);
-            } else if ("save".equalsIgnoreCase(input)) {
-                screen.getDisplayExplorer().display(screen, DisplayType.SAVE_GAME);
-            } else {
-                performDefaultCommand(screen, input, v -> {
-                });
+            switch (input.toLowerCase()) {
+                case CMD_BACK:
+                    //screen.getDisplayExplorer().display(screen, DisplayType.PLAY_GAME);
+                    break;
+                case CMD_SAVE:
+                    screen.getDisplayExplorer().next(screen, DisplayType.SAVE_GAME);
+                    break;
+                default:
+                    performDefaultCommand(screen, input, v -> {
+                        throw new InputMismatchException();
+                    });
+                    break;
             }
         }, true);
     }

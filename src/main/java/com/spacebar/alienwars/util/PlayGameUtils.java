@@ -12,10 +12,7 @@ import com.spacebar.alienwars.screen.Screen;
 import com.spacebar.alienwars.spaceship.Spaceship;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.InputMismatchException;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static com.spacebar.alienwars.util.GameUtils.CMD_EXIT;
 import static com.spacebar.alienwars.util.GameUtils.CMD_HOME;
@@ -27,6 +24,59 @@ public class PlayGameUtils {
 
     private PlayGameUtils() {
     }
+
+    /**
+     * Builds a coordinate map exempting already assigned co-ordinates
+     * @param screen
+     * @return
+     */
+    public static Map<Integer, Player[]> buildCoordinateMap(Screen screen) {
+        Game game = screen.getGame();
+        Player[] alienPlayers = game.getAlienPlayers();
+        Player characterPlayer = game.getCharacterPlayer();
+
+        int width = screen.getWidth() - 2;
+        int height = screen.getHeight();
+        Map<Integer, Player[]> positionMap = new HashMap<>();
+
+        //compute a random positon for alien spaceship if NOT IN PLAY
+        int maxAlienPerRow = 4;
+        int maxX = Math.max(width, alienPlayers.length) / Math.max(alienPlayers.length, 1);
+        int x = 0;
+        Random random = new Random();
+        for (int index = 0; index < alienPlayers.length; index++) {
+            Player player = alienPlayers[index];
+            if (player.getSpaceship().isDestroyed() && game.isPlaying()) {
+                player.setSpaceship(screen.getSpaceshipFactory().createSpaceship(player.getSpaceship().getSpaceshipType()));
+            }
+
+            Point coordinate = player.getSpaceship().getCoordinate();
+            String display = player.getSpaceship().getDisplay();
+            int m = Math.max(maxX, display.length());
+
+            if (index >= maxAlienPerRow && (index % maxAlienPerRow) == 0) {
+                x = 0;
+                coordinate.y = coordinate.y > 0 ? coordinate.y : (index / maxAlienPerRow) + 1;
+            }
+            if (coordinate.x == 0) {
+                coordinate.x = random.nextInt(Math.max((m * index) - x - display.length(), 1)) + x;
+                coordinate.x = Math.min(coordinate.x, width - display.length());
+                x = coordinate.x + x + display.length();
+            }
+
+            Player[] players = PlayGameUtils.addPlayerToGroup(player, positionMap.get(coordinate.y));
+            positionMap.put(coordinate.y, players);
+        }
+
+        // position character player at the footer
+        Point coordinate = characterPlayer.getSpaceship().getCoordinate();
+        coordinate.x = coordinate.x > 0 ? coordinate.x : (width - characterPlayer.getSpaceship().getDisplay().length()) / 2;
+        coordinate.y = height;
+        positionMap.put(coordinate.y, new Player[]{characterPlayer});
+
+        return positionMap;
+    }
+
 
     /// Game Game level Up and Status methods
     public static boolean levelUp(Screen screen, int steps, int shot) {
@@ -84,7 +134,7 @@ public class PlayGameUtils {
      * @param players
      */
     public static void checkPlayerGameStatus(Player[] playerList, Player... players) {
-        if (playerList != null && Arrays.stream(playerList).allMatch(Objects::nonNull)) {
+        if (playerList != null && Arrays.stream(playerList).anyMatch(p -> p != null && !p.getSpaceship().isDestroyed())) {
             Arrays.stream(players).filter(o -> o != null && o.getPlayerXP() != null).forEach(p -> {
                         p.getPlayerXP().subtractHealth(1);
                         if (p.getPlayerXP().getAvailableHealth() <= 0) {
@@ -96,15 +146,15 @@ public class PlayGameUtils {
     }
 
     public static boolean containsAliens(Map<Integer, Player[]> coordinateMap) {
-        return coordinateMap.keySet().stream().filter(key -> {
+        return coordinateMap.keySet().stream().anyMatch(key -> {
                     Player[] players = coordinateMap.get(key);
                     return players != null &&
                             Arrays.stream(players)
-                                    .filter(p -> p != null &&
+                                    .anyMatch(p -> p != null &&
                                             PlayerType.ALIEN.equals(p.getPlayerType()) &&
-                                            !p.getSpaceship().isDestroyed()).findFirst().isPresent();
+                                            !p.getSpaceship().isDestroyed());
                 }
-        ).findFirst().isPresent();
+        );
     }
 
     // ======================== utils for minor computation

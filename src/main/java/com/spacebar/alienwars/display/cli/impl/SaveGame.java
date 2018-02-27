@@ -66,23 +66,15 @@ public class SaveGame extends AbstractCLIDisplay {
         if (game instanceof AbstractGame) {
             ((AbstractGame) game).setName(input);
         }
-        saveGame(input, game);
+        try {
+            GameUtils.saveGame(input, game);
+        } catch (IOException e) {
+            throw new InputMismatchException();
+        }
         if (!screen.getDisplayExplorer().previous(screen)) {
             throw new InputMismatchException();
         }
     }
 
 
-    private void saveGame(String name, Game game) {
-        try {
-            String fileName = String.valueOf(System.currentTimeMillis());
-            GameUtils.getManifest().put(name, fileName);
-
-            FileUtils.writeAsObject(fileName, game);
-            FileUtils.writeManifest(GameUtils.getManifest());
-
-        } catch (IOException e) {
-            //
-        }
-    }
 }

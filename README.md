@@ -1,5 +1,5 @@
 # Alienwars 
-[![Coverage Status](https://coveralls.io/repos/github/space-bar/alienwars/badge.svg?branch=master)](https://coveralls.io/github/space-bar/alienwars?branch=master) [![Build Status](https://travis-ci.org/space-bar/alienwars.svg?branch=master)](https://travis-ci.org/space-bar/alienwars) [![Maintainability](https://api.codeclimate.com/v1/badges/21f72c06650e817fe8c1/maintainability)](https://codeclimate.com/github/space-bar/alienwars/maintainability)
+[![MIT LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/space-bar/alienwars/blob/master/LICENSE) [![Coverage Status](https://coveralls.io/repos/github/space-bar/alienwars/badge.svg?branch=master)](https://coveralls.io/github/space-bar/alienwars?branch=master) [![Build Status](https://travis-ci.org/space-bar/alienwars.svg?branch=master)](https://travis-ci.org/space-bar/alienwars) [![Maintainability](https://api.codeclimate.com/v1/badges/21f72c06650e817fe8c1/maintainability)](https://codeclimate.com/github/space-bar/alienwars/maintainability)
 
 ----
  Alienwars is a CLI-RPG application of an alien invasion, you are expected to defend your planet at all cost.
@@ -24,7 +24,7 @@ java -jar alienwars-1.0.0.jar
 ```
 
 
-####  Control COMMANDS
+##  Control COMMANDS
 >
 1. ``HOME`` to goto the Home main Menu
 2. ``BACK`` to go back to previous display
@@ -35,7 +35,7 @@ java -jar alienwars-1.0.0.jar
 7. ``R`` or ``D`` to move right
 8. ``1`` or ``ENTER`` to fire an alien
 
-####  The XP Factor
+##  The XP Factor
 
 You will need to get XP faster inorder to level up, there fore you need to understand how points are calculated.
 1. ``MOVES:`` you have a max of 2 moves to make a kill, anything more you lose the moves point
@@ -43,7 +43,7 @@ You will need to get XP faster inorder to level up, there fore you need to under
 3. ``HEAD SHOTS:``  making a hit is one thing but can you hit the bullseye, an headshot is the center of the spaceship, hit that you get extra points
 4. ``HIT TIME INTERVAL:`` how long from the start of the game or from your last hit did you make another hit, time is of the essence, 15sec to make a hit and you get an extra point.
 
-####  Things to know
+##  Things to know
 
 While you play the game you will need to watch you game statistics:
 
@@ -54,3 +54,7 @@ While you play the game you will need to watch you game statistics:
 
 You``LOSE`` the game when the aliens land on your planet or when you round out of weapon rounds or when you have no more health
  
+ 
+ ## License
+ 
+ [MIT](https://github.com/space-bar/alienwars/blob/master/LICENSE) © [Oluwaseun Ogunjimi](). Released under the MIT license. 

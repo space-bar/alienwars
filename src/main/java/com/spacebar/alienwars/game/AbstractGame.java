@@ -34,12 +34,17 @@ public abstract class AbstractGame implements Game {
     public void start() throws GameInitializationException {
         playing = true;
         status = GameStatus.IN_PLAY;
+        if (characterPlayer == null)
+            throw new GameInitializationException();
     }
+
     @Override
     public void restart(Player... aliens) throws GameInitializationException {
         this.alienPlayers = aliens;
         playing = true;
         status = GameStatus.IN_PLAY;
+        if (characterPlayer == null)
+            throw new GameInitializationException();
     }
 
     @Override
