@@ -359,9 +359,9 @@ public class PlayGame extends AbstractCLIDisplay {
     }
 
     private void readInput(Screen screen) {
-        this.readInput(screen, (String input) ->
-                processInput(screen, input)
-        );
+        this.readInput(screen, (String input) -> {
+            processInput(screen, input);
+        }, true);
     }
 
     private void processInput(Screen screen, String input) {
@@ -373,23 +373,55 @@ public class PlayGame extends AbstractCLIDisplay {
                 shot = computeHitShotX(screen.getGame());
             }
         } else {
-            input = trimValue(input);
-            char cmd = Character.toLowerCase(input.charAt(0));
-
-            if (cmd == 'r') {
-                steps = countRepetitiveLetter(input, 'r');
-            } else if (cmd == 'l') {
-                steps = countRepetitiveLetter(input, 'l');
-                steps = Math.negateExact(steps);
-            } else if (CMD_SAVE.equalsIgnoreCase(input)) {
-                pauseGameAndDisplay(screen, DisplayType.SAVE_GAME);
-                return;
-            } else if (CMD_STAT.equalsIgnoreCase(input)) {
-                pauseGameAndDisplay(screen, DisplayType.GAME_STAT);
-                return;
-            }
+            steps = processMoves(screen, trimValue(input));
         }
         renderGame(screen, steps, shot);
+    }
+
+    private int processMoves(Screen screen, String input) {
+        int steps = 0;
+        char cmd = Character.toLowerCase(input.charAt(0));
+        switch (Character.toLowerCase(cmd)) {
+            case 'l':
+                steps = countRepetitiveLetter(input, cmd);
+                steps = Math.negateExact(steps);
+                break;
+            case 'r':
+                steps = countRepetitiveLetter(input, cmd);
+                break;
+            case 'a': //left
+                steps = countRepetitiveLetter(input, cmd);
+                steps = Math.negateExact(steps);
+                break;
+            case 'd': //right
+                steps = countRepetitiveLetter(input, cmd);
+                break;
+            default: {
+                processActions(screen, input);
+            }
+        }
+        return steps;
+    }
+
+    private void processActions(Screen screen, String input) {
+        switch (input.toLowerCase()) {
+            case CMD_SAVE:
+                pauseGameAndDisplay(screen, DisplayType.SAVE_GAME);
+                break;
+            case CMD_STAT:
+                pauseGameAndDisplay(screen, DisplayType.GAME_STAT);
+                break;
+
+            case CMD_HOME:
+                pauseGameAndDisplay(screen, DisplayType.HOME);
+                break;
+            case CMD_EXIT:
+                pauseGameAndDisplay(screen, DisplayType.EXIT);
+                break;
+            default: {
+                throw new InputMismatchException();
+            }
+        }
     }
 
     private void pauseGameAndDisplay(Screen screen, DisplayType displayType) {

@@ -15,8 +15,6 @@ public final class FileUtils {
         return System.getProperty("user.home") + File.separator + "alien-wars";
     }
 
-    private static Properties MANIFEST = new Properties();
-
     private FileUtils() {
     }
 
@@ -24,10 +22,6 @@ public final class FileUtils {
         Path path = Paths.get(getHomeDirectory(), "manifest");
         Properties properties = new Properties();
         if (path.toFile().exists()) {
-            /*byte[] bytes = Files.readAllBytes(path);
-            try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes)) {
-                properties.load(byteArrayInputStream);
-            }*/
             try (InputStream inputStream = Files.newInputStream(path)) {
                 properties.load(inputStream);
             }

@@ -7,8 +7,7 @@ import com.spacebar.alienwars.spaceship.SpaceshipType;
 import com.spacebar.alienwars.util.GameUtils;
 import org.junit.Assert;
 
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 import static com.spacebar.alienwars.display.cli.AbstractCLIDisplay.CMD_EXIT;
 
@@ -23,28 +22,34 @@ public abstract class AbstractDisplayTest extends AbstractCLITest {
         screen.setGame(game);
     }
 
-
     protected void newSpaceship() {
         int x = new Random().nextInt(CHARACTER_SPACESHIP_TYPES.length);
         Spaceship spaceship = GameUtils.createSpaceship(screen, CHARACTER_SPACESHIP_TYPES[x]);
         screen.getGame().getCharacterPlayer().setSpaceship(spaceship);
     }
 
-    protected void renderDisplay_whenInputs_thenTerminate(DisplayType displayType, String... inputs) {
-        renderDisplay_whenInputs_thenTerminate(displayType, new DisplayType[]{displayType}, inputs);
+    protected void renderDisplay_whenInputs_thenAssert(DisplayType displayType, String... inputs) {
+        renderDisplay_whenInputs_thenAssert(new DisplayType[]{displayType}, inputs);
     }
 
-    protected void renderDisplay_whenInputs_thenTerminate(DisplayType displayType, DisplayType[] assertDisplayTypes, String... inputs) {
+    protected void renderDisplay_whenInputs_thenAssert(DisplayType[] expectedDisplayTypes, String... inputs) {
         if (inputs != null && inputs.length > 0) {
             systemInMock.provideLines(inputs);
         }
         exit.expectSystemExitWithStatus(0);
-        screen.getDisplayExplorer().next(screen, displayType);
-        if (assertDisplayTypes != null) {
-            Arrays.stream(assertDisplayTypes).forEach(d ->
-                    Assert.assertTrue(screen.getDisplayExplorer().history(d))
-            );
+        if (expectedDisplayTypes.length > 0) {
+            exit.checkAssertionAfterwards(() -> {
+                DisplayType[] actualDisplayTypes = screen.getDisplayExplorer().history();
+                if (actualDisplayTypes.length > 1) {
+                    List<DisplayType> displayTypes = Arrays.asList(actualDisplayTypes);
+                    Collections.reverse(displayTypes);
+                    actualDisplayTypes = displayTypes.toArray(new DisplayType[actualDisplayTypes.length]);
+                }
+                Assert.assertArrayEquals(expectedDisplayTypes, actualDisplayTypes);
+            });
+
+            screen.getDisplayExplorer().next(screen, expectedDisplayTypes[0]);
         }
-        Assert.assertEquals(DisplayType.EXIT, screen.getDisplayExplorer().current().getDisplayType());
     }
+
 }

@@ -4,7 +4,6 @@ import com.spacebar.alienwars.display.DisplayFactory;
 import com.spacebar.alienwars.display.DisplayType;
 import com.spacebar.alienwars.display.Display;
 import com.spacebar.alienwars.display.cli.impl.*;
-import com.spacebar.alienwars.game.Game;
 
 public class CLIDisplayFactory implements DisplayFactory {
 
@@ -45,6 +44,7 @@ public class CLIDisplayFactory implements DisplayFactory {
 
                 case SAVE_GAME:
                     return getSaveGameDisplay();
+
                 case GAME_STAT:
                     return getGameStatDisplay();
 

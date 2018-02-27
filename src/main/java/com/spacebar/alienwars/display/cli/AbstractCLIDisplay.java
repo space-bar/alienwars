@@ -103,19 +103,6 @@ public abstract class AbstractCLIDisplay implements Display {
                     }
             }
         }
-        /*if (CMD_EXIT.equalsIgnoreCase(value)) {
-            screen.getDisplayExplorer().next(screen, DisplayType.EXIT);
-        } else if (CMD_BACK.equalsIgnoreCase(value)) {
-            screen.getDisplayExplorer().previous(screen);
-        } else if (CMD_HOME.equalsIgnoreCase(value)) {
-            Display display = screen.getDisplayExplorer().current();
-            if (display == null || (!DisplayType.HOME.equals(display.getDisplayType()) && !DisplayType.HOME.equals(displayType)))
-                screen.getDisplayExplorer().next(screen, DisplayType.HOME);
-            else
-                throw new InputMismatchException();
-        } else if (fnx != null) {
-            fnx.accept(input);
-        }*/
     }
 
     protected Integer convertToInt(String value) {

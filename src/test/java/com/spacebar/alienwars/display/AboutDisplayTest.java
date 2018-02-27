@@ -11,23 +11,22 @@ public class AboutDisplayTest extends AbstractDisplayTest {
 
     @Test
     public void shouldRenderABOUT_whenExitAsInput_thenTerminate() {
-        renderDisplay_whenInputs_thenTerminate(DisplayType.ABOUT, CMD_EXIT);
+        renderDisplay_whenInputs_thenAssert(
+                DisplayType.ABOUT,
+                CMD_EXIT);
     }
-
 
     @Test
     public void shouldRenderABOUT_whenHomeAsInput_thenHOME_whenExitAsInput_thenTerminate() {
-        renderDisplay_whenInputs_thenTerminate(
-                DisplayType.ABOUT,
-                new DisplayType[]{DisplayType.HOME, DisplayType.ABOUT},
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.ABOUT, DisplayType.HOME},
                 CMD_HOME, CMD_EXIT);
     }
 
     @Test
     public void shouldRenderHOME_when4AsInput_thenABOUT_whenBackAsInput_thenHOME_whenExitAsInput_thenTerminate() {
-        renderDisplay_whenInputs_thenTerminate(
+        renderDisplay_whenInputs_thenAssert(
                 DisplayType.HOME,
-                new DisplayType[]{DisplayType.HOME, DisplayType.ABOUT},
                 "4", CMD_BACK, CMD_EXIT);
     }
 

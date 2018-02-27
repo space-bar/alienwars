@@ -10,7 +10,6 @@ import com.spacebar.alienwars.util.GameUtils;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
-import java.util.Properties;
 
 public class SaveGame extends AbstractCLIDisplay {
     public static final String HEADER = "" +
@@ -22,7 +21,7 @@ public class SaveGame extends AbstractCLIDisplay {
             "        \\/      \\/            \\/          \\/      \\/       \\/      \\/ ";
 
     public SaveGame() {
-        super(DisplayType.HELP);
+        super(DisplayType.SAVE_GAME);
     }
 
     @Override
@@ -31,7 +30,7 @@ public class SaveGame extends AbstractCLIDisplay {
 
         drawHeader(screen, HEADER.split(NEW_LINE));
         drawBody(screen, RABBIT.split(NEW_LINE));
-        drawBody(screen, "Save your Game ", gameName != null ? "Press Enter to use your Player Name:" + gameName:WHITE_SPACE,
+        drawBody(screen, "Save your Game ", gameName != null ? "Press Enter to use your Player Name:" + gameName : WHITE_SPACE,
                 "Enter a name not lesser than 3 characters", WHITE_SPACE,
                 "[Just type EXIT to quit Or hit Back without saving]", WHITE_SPACE);
 
@@ -68,9 +67,10 @@ public class SaveGame extends AbstractCLIDisplay {
             ((AbstractGame) game).setName(input);
         }
         saveGame(input, game);
-        screen.getDisplayExplorer().previous(screen);
+        if (!screen.getDisplayExplorer().previous(screen)) {
+            throw new InputMismatchException();
+        }
     }
-
 
 
     private void saveGame(String name, Game game) {
@@ -82,7 +82,7 @@ public class SaveGame extends AbstractCLIDisplay {
             FileUtils.writeManifest(GameUtils.getManifest());
 
         } catch (IOException e) {
-            e.printStackTrace();
+            //
         }
     }
 }

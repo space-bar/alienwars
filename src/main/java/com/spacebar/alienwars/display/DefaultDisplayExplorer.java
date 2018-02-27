@@ -6,8 +6,6 @@ import com.spacebar.alienwars.screen.Screen;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
-import java.util.Stack;
-import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class DefaultDisplayExplorer implements DisplayExplorer {
 
@@ -15,44 +13,33 @@ public class DefaultDisplayExplorer implements DisplayExplorer {
     private Display current;
 
     @Override
-    public void previous(Screen screen) {
+    public boolean previous(Screen screen) {
         if (!explorerStack.isEmpty()) {
-            DisplayType displayType = explorerStack.pop();
-            Optional<Display> displayableOptional = getDisplay(screen, displayType);
+            Optional<Display> displayableOptional = getDisplay(screen, explorerStack.peek());
             if (displayableOptional.isPresent()) {
-                Display display = displayableOptional.get();
-                current = display;
-                clearScreen(screen);
-                display.display(screen);
-
+                explorerStack.pop();
+                return display(screen, displayableOptional);
             }
         }
+        return false;
     }
 
     @Override
-    public void next(Screen screen, DisplayType displayType) {
+    public boolean next(Screen screen, DisplayType displayType) {
         Optional<Display> displayableOptional = getDisplay(screen, displayType);
         if (displayableOptional.isPresent()) {
-            Display display = displayableOptional.get();
             if (current != null) {
                 explorerStack.push(current.getDisplayType());
             }
-            current = display;
-            clearScreen(screen);
-            display.display(screen);
-
+            return display(screen, displayableOptional);
         }
+        return false;
     }
 
     @Override
-    public void display(Screen screen, DisplayType displayType) {
+    public boolean display(Screen screen, DisplayType displayType) {
         Optional<Display> displayableOptional = getDisplay(screen, displayType);
-        if (displayableOptional.isPresent()) {
-            Display display = displayableOptional.get();
-            current = display;
-            clearScreen(screen);
-            display.display(screen);
-        }
+        return display(screen, displayableOptional);
     }
 
     @Override
@@ -61,8 +48,8 @@ public class DefaultDisplayExplorer implements DisplayExplorer {
     }
 
 
-    public boolean history(DisplayType displayType) {
-       return explorerStack.contains(displayType);
+    public DisplayType[] history() {
+        return explorerStack.toArray(new DisplayType[explorerStack.size()]);
     }
 
     private Optional<Display> getDisplay(Screen screen, DisplayType displayType) {
@@ -74,6 +61,17 @@ public class DefaultDisplayExplorer implements DisplayExplorer {
             }
         }
         return display != null ? Optional.of(display) : Optional.empty();
+    }
+
+    private boolean display(Screen screen, Optional<Display> displayableOptional) {
+        if (displayableOptional.isPresent()) {
+            Display display = displayableOptional.get();
+            current = display;
+            clearScreen(screen);
+            display.display(screen);
+            return true;
+        }
+        return false;
     }
 
     private void clearScreen(Screen screen) {

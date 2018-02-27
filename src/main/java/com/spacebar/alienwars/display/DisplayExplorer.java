@@ -4,13 +4,13 @@ import com.spacebar.alienwars.screen.Screen;
 
 public interface DisplayExplorer {
 
-    void previous(Screen screen);
+    boolean previous(Screen screen);
 
-    void next(Screen screen, DisplayType displayType);
+    boolean next(Screen screen, DisplayType displayType);
 
-    void display(Screen screen, DisplayType displayType);
+    boolean display(Screen screen, DisplayType displayType);
 
     Display current();
 
-    boolean history(DisplayType displayType);
+    DisplayType[] history();
 }

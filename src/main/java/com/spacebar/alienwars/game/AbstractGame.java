@@ -55,8 +55,8 @@ public abstract class AbstractGame implements Game {
 
     @Override
     public void pause(GameStatus status) throws GameIllegalStateException {
-        playing = false;
         this.status = status;
+        playing = false;
     }
 
     @Override

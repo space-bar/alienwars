@@ -20,22 +20,22 @@ public class GameStatDisplayTest extends AbstractDisplayTest {
 
     @Test
     public void shouldRenderGAMESTAT_whenExitAsInput_thenTerminate() {
-        renderDisplay_whenInputs_thenTerminate(DisplayType.GAME_STAT, CMD_EXIT);
+        renderDisplay_whenInputs_thenAssert(
+                DisplayType.GAME_STAT,
+                CMD_EXIT);
     }
 
     @Test
     public void shouldRenderGAMESTAT_whenHomeAsInput_thenHOME_whenExitAsInput_thenTerminate() {
-        renderDisplay_whenInputs_thenTerminate(
-                DisplayType.GAME_STAT,
-                new DisplayType[]{DisplayType.HOME, DisplayType.GAME_STAT},
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.GAME_STAT, DisplayType.HOME},
                 CMD_HOME, CMD_EXIT);
     }
 
     @Test
     public void shouldRenderPLAYGAME_whenStatAsInput_thenGAMESTAT_whenBackAsInput_thenPLAYGAME_whenExitAsInput_thenTerminate() {
-        renderDisplay_whenInputs_thenTerminate(
-                DisplayType.PLAY_GAME,
-                new DisplayType[]{DisplayType.PLAY_GAME, DisplayType.GAME_STAT},
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.PLAY_GAME},
                 CMD_STAT, CMD_BACK, CMD_EXIT);
     }
 }

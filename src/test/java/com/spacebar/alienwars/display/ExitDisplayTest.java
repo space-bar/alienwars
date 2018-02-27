@@ -8,6 +8,7 @@ public class ExitDisplayTest extends AbstractDisplayTest {
 
     @Test
     public void shouldRenderEXIT_thenTerminate() {
-        renderDisplay_whenInputs_thenTerminate(DisplayType.EXIT);
+        exit.expectSystemExitWithStatus(0);
+        screen.getDisplayExplorer().next(screen, DisplayType.EXIT);
     }
 }

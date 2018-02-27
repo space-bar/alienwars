@@ -1,5 +1,7 @@
 package com.spacebar.alienwars.display;
 
+import com.spacebar.alienwars.player.Player;
+import com.spacebar.alienwars.util.GameUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,34 +13,37 @@ public class NewGameDisplayTest extends AbstractDisplayTest {
 
     @Test
     public void shouldRenderNEWGAME_whenExitAsInput_thenTerminate() {
-        renderDisplay_whenInputs_thenTerminate(DisplayType.NEW_GAME, CMD_EXIT);
+        renderDisplay_whenInputs_thenAssert(
+                DisplayType.NEW_GAME,
+                CMD_EXIT);
     }
 
 
     @Test
     public void shouldRenderNEWGAME_whenHomeAsInput_thenHOME_whenExitAsInput_thenTerminate() {
-        renderDisplay_whenInputs_thenTerminate(
-                DisplayType.NEW_GAME,
-                new DisplayType[]{DisplayType.HOME, DisplayType.NEW_GAME},
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.NEW_GAME, DisplayType.HOME},
                 CMD_HOME, CMD_EXIT);
     }
 
     @Test
     public void shouldRenderHOME_when1AsInput_thenNEWGAME_whenBackAsInput_thenHOME_whenExitAsInput_thenTerminate() {
-        renderDisplay_whenInputs_thenTerminate(
+        renderDisplay_whenInputs_thenAssert(
                 DisplayType.HOME,
-                new DisplayType[]{DisplayType.HOME, DisplayType.NEW_GAME},
                 "1", CMD_BACK, CMD_EXIT);
     }
 
-    //
+
     @Test
     public void shouldRenderNEWGAME_whenPlayerNameAsInput_thenSELECTSPACESHIP_whenExitAsInput_thenTerminate() {
-        String playerName = "Test Player";
-        renderDisplay_whenInputs_thenTerminate(
-                DisplayType.NEW_GAME,
-                new DisplayType[]{DisplayType.SELECT_SPACE_SHIP, DisplayType.NEW_GAME},
+        String playerName = "TestPlayer";
+        exit.checkAssertionAfterwards(() ->
+                Assert.assertEquals(playerName, screen.getGame().getCharacterPlayer().getPlayerName())
+        );
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.NEW_GAME, DisplayType.SELECT_SPACE_SHIP},
                 playerName, CMD_EXIT);
-        Assert.assertEquals(playerName, screen.getGame().getCharacterPlayer().getPlayerName());
+
     }
+
 }

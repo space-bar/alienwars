@@ -10,23 +10,23 @@ public class HelpDisplayTest extends AbstractDisplayTest {
 
     @Test
     public void shouldRenderHELP_whenExitAsInput_thenTerminate() {
-        renderDisplay_whenInputs_thenTerminate(DisplayType.HELP, CMD_EXIT);
+        renderDisplay_whenInputs_thenAssert(
+                DisplayType.HELP,
+                CMD_EXIT);
     }
 
 
     @Test
     public void shouldRenderHELP_whenHomeAsInput_thenHOME_whenExitAsInput_thenTerminate() {
-        renderDisplay_whenInputs_thenTerminate(
-                DisplayType.HELP,
-                new DisplayType[]{DisplayType.HOME, DisplayType.HELP},
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.HELP, DisplayType.HOME},
                 CMD_HOME, CMD_EXIT);
     }
 
     @Test
     public void shouldRenderHOME_when3AsInput_thenHELP_whenBackAsInput_thenHOME_whenExitAsInput_thenTerminate() {
-        renderDisplay_whenInputs_thenTerminate(
-                DisplayType.HOME,
-                new DisplayType[]{DisplayType.HOME, DisplayType.HELP},
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.HOME},
                 "3", CMD_BACK, CMD_EXIT);
     }
 }

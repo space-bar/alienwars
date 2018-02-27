@@ -1,10 +1,13 @@
 package com.spacebar.alienwars.display;
 
+import com.spacebar.alienwars.util.GameUtils;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 
 import static com.spacebar.alienwars.display.cli.AbstractCLIDisplay.CMD_EXIT;
+import static com.spacebar.alienwars.display.cli.AbstractCLIDisplay.CMD_HOME;
 
 public class PlayGameDisplayTest extends AbstractDisplayTest {
 
@@ -18,17 +21,24 @@ public class PlayGameDisplayTest extends AbstractDisplayTest {
 
     @Test
     public void shouldRenderPLAYGAME_whenExitAsInput_thenExit() {
-        systemInMock.provideLines(CMD_EXIT);
-        exit.expectSystemExitWithStatus(0);
-        screen.getDisplayExplorer().display(screen, DisplayType.PLAY_GAME);
+        renderDisplay_whenInputs_thenAssert(
+                DisplayType.PLAY_GAME,
+                CMD_EXIT);
+    }
+
+    @Test
+    public void shouldRenderPLAYGAME_whenHomeAsInput_thenHOME_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.PLAY_GAME, DisplayType.HOME},
+                CMD_HOME, CMD_EXIT);
     }
 
     @Test
     public void shouldRenderPLAYGAME_whenInvalidInput_thenExitAsInput_thenExit() {
-        systemInMock.provideLines("X", CMD_EXIT);
-        exit.expectSystemExitWithStatus(0);
-        screen.getDisplayExplorer().display(screen, DisplayType.PLAY_GAME);
+        String input = "XX";
+        renderDisplay_whenInputs_thenAssert(
+                DisplayType.PLAY_GAME,
+                input, CMD_EXIT);
     }
-
 
 }

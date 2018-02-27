@@ -9,7 +9,6 @@ import com.spacebar.alienwars.screen.Screen;
 import com.spacebar.alienwars.util.FileUtils;
 import com.spacebar.alienwars.util.GameUtils;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -56,24 +55,26 @@ public class LoadSavedGame extends AbstractCLIDisplay {
     private String[] buildBody() {
         List<String> gameDisplayList = new ArrayList<>();
         Properties manifest = GameUtils.getManifest();
-        gameList = manifest.stringPropertyNames().stream().filter(key -> {
-            String filename = manifest.getProperty(key);
-            try {
-                if (filename != null) {
-                    String display = key + " [" + dateFormat.format(new Date(Long.parseLong(filename))) + "]";
-                    gameDisplayList.add(display);
-                    return true;
-                }
-            } catch (Exception ex) {
-                return false;
-            }
-            return false;
+        gameList = manifest.stringPropertyNames().stream()
+                .sorted(Comparator.reverseOrder())
+                .filter(key -> {
+                    String filename = manifest.getProperty(key);
+                    try {
+                        if (filename != null) {
+                            String display = key + " [" + dateFormat.format(new Date(Long.parseLong(filename))) + "]";
+                            gameDisplayList.add(display);
+                            return true;
+                        }
+                    } catch (Exception ex) {
+                        return false;
+                    }
+                    return false;
 
-        }).map(key -> manifest.getProperty(key)).collect(Collectors.toList());
+                }).map(key -> manifest.getProperty(key)).collect(Collectors.toList());
 
         String[] body = new String[gameDisplayList.size()];
         IntStream.range(0, gameDisplayList.size()).forEach(index ->
-                body[index] = index + 1 + ". " + gameDisplayList.get(index)
+                body[index] = (index + 1) + ". " + gameDisplayList.get(index)
         );
         return body;
     }

@@ -3,27 +3,35 @@ package com.spacebar.alienwars.display;
 import org.junit.Test;
 
 import static com.spacebar.alienwars.display.cli.AbstractCLIDisplay.CMD_EXIT;
+import static com.spacebar.alienwars.display.cli.AbstractCLIDisplay.CMD_HOME;
 
 public class HomeDisplayTest extends AbstractDisplayTest {
 
     @Test
     public void shouldRenderHOME_whenExitAsInput_thenTerminate() {
-        systemInMock.provideLines(CMD_EXIT);
-        exit.expectSystemExitWithStatus(0);
-        screen.getDisplayExplorer().next(screen, DisplayType.HOME);
+        renderDisplay_whenInputs_thenAssert(
+                DisplayType.HOME,
+                CMD_EXIT);
     }
 
     @Test
-    public void shouldRenderHOME_when4AsInput_thenRenderABOUT_whenExitAsInput_thenTerminate() {
-        systemInMock.provideLines("4", CMD_EXIT);
-        exit.expectSystemExitWithStatus(0);
-        screen.getDisplayExplorer().next(screen, DisplayType.HOME);
+    public void shouldRenderHOME_when4AsInput_thenABOUT_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.HOME, DisplayType.ABOUT},
+                "4", CMD_EXIT);
     }
 
     @Test
-    public void shouldRenderHOME_when3AsInput_thenRenderHELP_whenExitAsInput_thenTerminate() {
-        systemInMock.provideLines("3", CMD_EXIT);
-        exit.expectSystemExitWithStatus(0);
-        screen.getDisplayExplorer().next(screen, DisplayType.HOME);
+    public void shouldRenderHOME_when3AsInput_thenHELP_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.HOME, DisplayType.HELP},
+                "3", CMD_EXIT);
+    }
+
+    @Test
+    public void shouldRenderHOME_whenHomeAsInput_thenDoesNothing_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                DisplayType.HOME,
+                CMD_HOME, CMD_EXIT);
     }
 }
