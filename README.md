@@ -1,5 +1,7 @@
 # Alienwars 
-[![MIT LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/space-bar/alienwars/blob/master/LICENSE) [![Coverage Status](https://coveralls.io/repos/github/space-bar/alienwars/badge.svg?branch=master)](https://coveralls.io/github/space-bar/alienwars?branch=master) [![Build Status](https://travis-ci.org/space-bar/alienwars.svg?branch=master)](https://travis-ci.org/space-bar/alienwars) [![Maintainability](https://api.codeclimate.com/v1/badges/21f72c06650e817fe8c1/maintainability)](https://codeclimate.com/github/space-bar/alienwars/maintainability)
+[![MIT LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/space-bar/alienwars/blob/master/LICENSE)
+[![Coverage Status](https://coveralls.io/repos/github/space-bar/alienwars/badge.svg)](https://coveralls.io/github/space-bar/alienwars)
+[![Build Status](https://travis-ci.org/space-bar/alienwars.svg?branch=master)](https://travis-ci.org/space-bar/alienwars) [![Maintainability](https://api.codeclimate.com/v1/badges/21f72c06650e817fe8c1/maintainability)](https://codeclimate.com/github/space-bar/alienwars/maintainability)
 
 ----
  Alienwars is a CLI-RPG application of an alien invasion, you are expected to defend your planet at all cost.
