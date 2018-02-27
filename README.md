@@ -49,9 +49,9 @@ You will need to get XP faster inorder to level up, there fore you need to under
 
 While you play the game you will need to watch you game statistics:
 
-1. ``LEVEL``           level in which you are currently playing , higher level gets more difficult as you play
-2. ``POINTS``          Your XP points shows how well you re performing check how XP is determined above
-3. ``WEAPON ROUNDS``   Your rounds decreases as you shot, if you exceed your rounds then you lose
+1. ``LEVEL``           level in which you are currently playing, higher level gets more difficult as you play
+2. ``POINTS``          Your XP points shows how well you re performing, check how XP is determined above
+3. ``WEAPON ROUNDS``   Your rounds decreases as you shoot, if you exceed your rounds then you lose
 4. ``Health``          Number of life of a player
 
 You``LOSE`` the game when the aliens land on your planet or when you round out of weapon rounds or when you have no more health
