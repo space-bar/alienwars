@@ -75,8 +75,7 @@ public class EndGame extends AbstractCLIDisplay {
         this.readInput(screen, (String input) -> {
             switch (input.toLowerCase()) {
                 case CMD_BACK:
-                    //screen.getDisplayExplorer().display(screen, DisplayType.PLAY_GAME);
-                    break;
+                    throw new InputMismatchException();
                 case CMD_SAVE:
                     screen.getDisplayExplorer().next(screen, DisplayType.SAVE_GAME);
                     break;

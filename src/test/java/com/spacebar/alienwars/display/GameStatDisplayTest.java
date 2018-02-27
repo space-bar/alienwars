@@ -6,6 +6,7 @@ import org.junit.Test;
 import static com.spacebar.alienwars.util.GameUtils.CMD_BACK;
 import static com.spacebar.alienwars.util.GameUtils.CMD_EXIT;
 import static com.spacebar.alienwars.util.GameUtils.CMD_HOME;
+import static com.spacebar.alienwars.util.PlayGameUtils.CMD_SAVE;
 import static com.spacebar.alienwars.util.PlayGameUtils.CMD_STAT;
 
 public class GameStatDisplayTest extends AbstractDisplayTest {
@@ -30,6 +31,20 @@ public class GameStatDisplayTest extends AbstractDisplayTest {
         renderDisplay_whenInputs_thenAssert(
                 new DisplayType[]{DisplayType.GAME_STAT, DisplayType.HOME},
                 CMD_HOME, CMD_EXIT);
+    }
+
+    @Test
+    public void shouldRenderGAMESTAT_whenSaveAsInput_thenSaveGame_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                new DisplayType[]{DisplayType.GAME_STAT, DisplayType.SAVE_GAME},
+                CMD_SAVE, CMD_EXIT);
+    }
+
+    @Test
+    public void shouldRenderGAMESTAT_whenInvalidInput_thenDoNothing_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                DisplayType.GAME_STAT,
+                "x", CMD_EXIT);
     }
 
     @Test

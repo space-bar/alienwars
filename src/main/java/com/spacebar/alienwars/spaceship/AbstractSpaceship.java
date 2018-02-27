@@ -47,10 +47,6 @@ public abstract class AbstractSpaceship implements Spaceship {
         return coordinate;
     }
 
-    public void setCoordinate(Point coordinate) {
-        this.coordinate = coordinate;
-    }
-
     @Override
     public SpaceshipType getSpaceshipType() {
         return spaceshipType;

@@ -5,7 +5,6 @@ import com.spacebar.alienwars.display.cli.AbstractCLIDisplay;
 import com.spacebar.alienwars.game.AbstractGame;
 import com.spacebar.alienwars.game.Game;
 import com.spacebar.alienwars.screen.Screen;
-import com.spacebar.alienwars.util.FileUtils;
 import com.spacebar.alienwars.util.GameUtils;
 
 import java.io.IOException;

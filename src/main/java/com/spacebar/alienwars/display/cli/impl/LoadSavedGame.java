@@ -70,7 +70,7 @@ public class LoadSavedGame extends AbstractCLIDisplay {
                     }
                     return false;
 
-                }).map(key -> manifest.getProperty(key)).collect(Collectors.toList());
+                }).map(manifest::getProperty).collect(Collectors.toList());
 
         String[] body = new String[gameDisplayList.size()];
         IntStream.range(0, gameDisplayList.size()).forEach(index ->

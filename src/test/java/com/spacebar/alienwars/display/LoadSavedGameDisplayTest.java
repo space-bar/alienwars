@@ -30,6 +30,13 @@ public class LoadSavedGameDisplayTest extends AbstractDisplayTest {
     }
 
     @Test
+    public void shouldRenderLOADSAVEDGAME_whenInvalidInput_thenDoNothing_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                DisplayType.LOAD_SAVED_GAME,
+                "x", CMD_EXIT);
+    }
+
+    @Test
     public void shouldRenderHOME_when2AsInput_thenLOADSAVEDGAME_whenBackAsInput_thenHOME_whenExitAsInput_thenTerminate() {
         renderDisplay_whenInputs_thenAssert(
                 new DisplayType[]{DisplayType.HOME},

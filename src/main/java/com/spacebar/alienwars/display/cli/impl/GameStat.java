@@ -8,6 +8,8 @@ import com.spacebar.alienwars.screen.Screen;
 
 import java.util.InputMismatchException;
 
+import static com.spacebar.alienwars.util.PlayGameUtils.CMD_SAVE;
+
 public class GameStat extends AbstractCLIDisplay {
 
     public static final String HEADER = "" +
@@ -57,8 +59,8 @@ public class GameStat extends AbstractCLIDisplay {
     private void readInput(Screen screen) {
         screen.getIOStream().write(NEW_LINE + "Enter:");
         this.readInput(screen, (String input) -> {
-            if ("save".equalsIgnoreCase(input)) {
-                screen.getDisplayExplorer().display(screen, DisplayType.SAVE_GAME);
+            if (CMD_SAVE.equalsIgnoreCase(input)) {
+                screen.getDisplayExplorer().next(screen, DisplayType.SAVE_GAME);
             } else {
                 throw new InputMismatchException();
             }

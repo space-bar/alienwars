@@ -9,7 +9,7 @@ public class CLISpaceship extends AbstractSpaceship {
     private String onDestroyDisplay;
 
     public CLISpaceship(SpaceshipType type) {
-        this(type, "/-^-\\");
+        super(type);
     }
 
     public CLISpaceship(SpaceshipType type, String display) {

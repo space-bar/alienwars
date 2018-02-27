@@ -29,4 +29,11 @@ public class HelpDisplayTest extends AbstractDisplayTest {
                 new DisplayType[]{DisplayType.HOME},
                 "3", CMD_BACK, CMD_EXIT);
     }
+
+    @Test
+    public void shouldRenderHELP_whenInvalidInput_thenDoNothing_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                DisplayType.HELP,
+                "x", CMD_EXIT);
+    }
 }

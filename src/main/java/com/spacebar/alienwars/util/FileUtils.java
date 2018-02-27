@@ -11,7 +11,7 @@ import java.util.Properties;
 
 public final class FileUtils {
 
-    public static String FILE_DIR = "java.io.tmpdir";
+    public static final String FILE_DIR = "java.io.tmpdir";
 
     private static String getHomeDirectory() {
         return System.getProperty(FILE_DIR) + File.separator + "alien-wars";

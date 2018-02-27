@@ -31,4 +31,11 @@ public class AboutDisplayTest extends AbstractDisplayTest {
                 "4", CMD_BACK, CMD_EXIT);
     }
 
+    @Test
+    public void shouldRenderABOUT_whenInvalidInput_thenDoNothing_whenExitAsInput_thenTerminate() {
+        renderDisplay_whenInputs_thenAssert(
+                DisplayType.ABOUT,
+                "x", CMD_EXIT);
+    }
+
 }
