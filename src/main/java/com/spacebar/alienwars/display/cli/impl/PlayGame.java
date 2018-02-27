@@ -9,7 +9,6 @@ import com.spacebar.alienwars.player.PlayerType;
 import com.spacebar.alienwars.player.PlayerXP;
 import com.spacebar.alienwars.screen.Screen;
 import com.spacebar.alienwars.display.cli.AbstractCLIDisplay;
-import com.spacebar.alienwars.screen.cli.CLIScreen;
 import com.spacebar.alienwars.util.GameUtils;
 import com.spacebar.alienwars.util.PlayGameUtils;
 import com.spacebar.alienwars.weapon.Weapon;
@@ -23,7 +22,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 public class PlayGame extends AbstractCLIDisplay {
-
 
     private Map<Integer, Player[]> coordinateMap;
 
@@ -109,10 +107,6 @@ public class PlayGame extends AbstractCLIDisplay {
                     " Weapon Rounds : " + weapon.getAvaliableRounds() + " / " + weapon.getRounds());
         }
     }
-
-
-
-
 
     private StringBuilder drawBattleField(Screen screen, int step, int shot) {
         int height = screen.getHeight();
@@ -272,5 +266,4 @@ public class PlayGame extends AbstractCLIDisplay {
         }
         renderGame(screen, steps, shot);
     }
-
 }
