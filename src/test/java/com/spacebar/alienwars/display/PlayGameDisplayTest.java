@@ -176,14 +176,12 @@ public class PlayGameDisplayTest extends AbstractDisplayTest {
         }
         input[input.length - 1] = CMD_EXIT;
         Arrays.stream(alienPlayers).forEach(p -> Assert.assertFalse(p.getSpaceship().isDestroyed()));
-        Assert.assertFalse(alienPlayers[0].getSpaceship().isDestroyed());
         exit.checkAssertionAfterwards(() -> {
             Arrays.stream(alienPlayers).forEach(p -> Assert.assertTrue(p.getSpaceship().isDestroyed()));
         });
         renderDisplay_whenInputs_thenAssert(
                 new DisplayType[]{DisplayType.PLAY_GAME},
                 input);
-
     }
 
 }

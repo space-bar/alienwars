@@ -4,6 +4,8 @@ import com.spacebar.alienwars.exception.GameIllegalStateException;
 import com.spacebar.alienwars.exception.GameInitializationException;
 import com.spacebar.alienwars.player.Player;
 
+import java.util.Arrays;
+
 public abstract class AbstractGame implements Game {
 
     private Player characterPlayer;
@@ -32,19 +34,22 @@ public abstract class AbstractGame implements Game {
 
     @Override
     public void start() throws GameInitializationException {
-        playing = true;
-        status = GameStatus.IN_PLAY;
         if (characterPlayer == null)
             throw new GameInitializationException();
+        playing = true;
+        status = GameStatus.IN_PLAY;
     }
 
     @Override
     public void restart(Player... aliens) throws GameInitializationException {
+        if (characterPlayer == null || aliens == null)
+            throw new GameInitializationException();
+        Arrays.stream(alienPlayers).forEach(p -> {
+            if (p != null) p.getSpaceship().destroy();
+        });
         this.alienPlayers = aliens;
         playing = true;
         status = GameStatus.IN_PLAY;
-        if (characterPlayer == null)
-            throw new GameInitializationException();
     }
 
     @Override
