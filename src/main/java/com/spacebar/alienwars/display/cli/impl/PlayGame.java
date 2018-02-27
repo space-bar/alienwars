@@ -71,7 +71,7 @@ public class PlayGame extends AbstractCLIDisplay {
         boolean levelUp = PlayGameUtils.levelUp(screen, steps, shot);
         renderGame(screen, battleField, gameStatus, levelUp);
 
-        if (levelUp || gameStatus == GameStatus.WON || PlayGameUtils.containsAliens(coordinateMap)) {
+        if (levelUp || gameStatus == GameStatus.WON || !PlayGameUtils.containsAliens(coordinateMap)) {
             if (levelUp) {
                 try {
                     Player[] aliens = GameUtils.createAliens(screen, screen.getGame().getCharacterPlayer().getPlayerXP().getEnemyCount());

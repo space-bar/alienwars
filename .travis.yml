@@ -2,20 +2,5 @@ language: java
 jdk:
   - oraclejdk8
 
-env:
-  global:
-    - CC_TEST_REPORTER_ID=b42c4befefcc8378090df0d2f483dbb46d29706547527f897c81d380ed4ef7da
-
 after_success:
 - "mvn clean test jacoco:report coveralls:report"
-
-before_script:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
-
-script:
-  - bundle exec rspec
-
-after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
