@@ -27,6 +27,7 @@ public class PlayGameUtils {
 
     /**
      * Builds a coordinate map exempting already assigned co-ordinates
+     *
      * @param screen
      * @return
      */
@@ -43,6 +44,7 @@ public class PlayGameUtils {
         int maxAlienPerRow = 4;
         int maxX = Math.max(width, alienPlayers.length) / Math.max(alienPlayers.length, 1);
         int x = 0;
+        int y = 0;
         Random random = new Random();
         for (int index = 0; index < alienPlayers.length; index++) {
             Player player = alienPlayers[index];
@@ -53,15 +55,17 @@ public class PlayGameUtils {
             Point coordinate = player.getSpaceship().getCoordinate();
             String display = player.getSpaceship().getDisplay();
             int m = Math.max(maxX, display.length());
-
             if (index >= maxAlienPerRow && (index % maxAlienPerRow) == 0) {
                 x = 0;
-                coordinate.y = coordinate.y > 0 ? coordinate.y : (index / maxAlienPerRow) + 1;
+                y++;
             }
             if (coordinate.x == 0) {
                 coordinate.x = random.nextInt(Math.max((m * index) - x - display.length(), 1)) + x;
                 coordinate.x = Math.min(coordinate.x, width - display.length());
                 x = coordinate.x + x + display.length();
+            }
+            if (coordinate.y == 0) {
+                coordinate.y = y;
             }
 
             Player[] players = PlayGameUtils.addPlayerToGroup(player, positionMap.get(coordinate.y));

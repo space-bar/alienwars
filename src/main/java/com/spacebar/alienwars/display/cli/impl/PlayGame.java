@@ -203,7 +203,7 @@ public class PlayGame extends AbstractCLIDisplay {
                     display = player.getSpaceship().getDisplay();
                     if (player.getSpaceship().isDestroyed()) {
                         IntStream.range(0, players.length)
-                                .filter(i -> player.equals(players[i]))
+                                .filter(i -> player!=null && player.equals(players[i]))
                                 .findFirst().ifPresent(i -> players[i] = null);
                     }
                     indexAt = index;
