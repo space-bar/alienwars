@@ -41,7 +41,7 @@ public class PlayGameUtils {
         Map<Integer, Player[]> positionMap = new HashMap<>();
 
         //compute a random positon for alien spaceship if NOT IN PLAY
-        int maxAlienPerRow = 4;
+        int maxAlienPerRow = Math.min(4,alienPlayers.length);
         int maxX = Math.max(width, alienPlayers.length) / Math.max(alienPlayers.length, 1);
         int x = 0;
         int y = 0;

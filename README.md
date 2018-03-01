@@ -1,7 +1,8 @@
 # Alienwars 
 [![MIT LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/space-bar/alienwars/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/space-bar/alienwars.svg?branch=master)](https://travis-ci.org/space-bar/alienwars) 
 [![Coverage Status](https://coveralls.io/repos/github/space-bar/alienwars/badge.svg?branch=master)](https://coveralls.io/github/space-bar/alienwars?branch=master)
-[![Build Status](https://travis-ci.org/space-bar/alienwars.svg?branch=master)](https://travis-ci.org/space-bar/alienwars) [![Maintainability](https://api.codeclimate.com/v1/badges/21f72c06650e817fe8c1/maintainability)](https://codeclimate.com/github/space-bar/alienwars/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/21f72c06650e817fe8c1/maintainability)](https://codeclimate.com/github/space-bar/alienwars/maintainability)
 
 ----
  Alienwars is a CLI-RPG application of an alien invasion, you are expected to defend your planet at all cost.
@@ -33,8 +34,8 @@ java -jar alienwars-1.0.0.jar
 3. ``SAVE`` to save a game on the save display screen
 4. ``STAT`` to view a full statistics report of current game in play
 5. ``EXIT`` to terminate the application
-6. ``L`` or ``A`` to move left
-7. ``R`` or ``D`` to move right
+6. ``L`` or ``A`` to move left (using multiple letter ``LLL`` or ``AAA`` to move 3 steps left)
+7. ``R`` or ``D`` to move right (using multiple letter ``RRR`` or ``DDD`` to move 3 steps right)
 8. ``1`` or ``ENTER`` to fire an alien
 
 ##  The XP Factor

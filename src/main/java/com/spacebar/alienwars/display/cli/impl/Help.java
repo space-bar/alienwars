@@ -37,8 +37,8 @@ public class Help extends AbstractCLIDisplay {
                 " SAVE       | Save Game while IN PLAY",
                 " EXIT       | terminate the Game application",
                 WHITE_SPACE,
-                "L or A      | move left",
-                "R or D      | move right",
+                "L or A      | move left (using multiple letter 'LLL' or 'AAA' to move 3 steps left)",
+                "R or D      | move right (using multiple letter 'RRR' or 'DDD' to move 3 steps right)",
                 "1 or ENTER  | fire"
         );
         drawFooter(screen, APP_LOGO.split(NEW_LINE));
